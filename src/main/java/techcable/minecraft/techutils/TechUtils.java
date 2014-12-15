@@ -5,10 +5,10 @@ import java.util.logging.Logger;
 
 import org.bukkit.OfflinePlayer;
 
-import techcable.minecraft.offlineplayers.AdvancedOfflinePlayer;
-import techcable.minecraft.offlineplayers.NBTAdvancedOfflinePlayer.PlayerNotFoundException;
-import techcable.minecraft.offlineplayers.OfflinePlayers;
 import techcable.minecraft.techutils.entity.TechPlayer;
+import techcable.minecraft.techutils.offlineplayers.AdvancedOfflinePlayer;
+import techcable.minecraft.techutils.offlineplayers.NBTAdvancedOfflinePlayer.PlayerNotFoundException;
+import techcable.minecraft.techutils.offlineplayers.OfflinePlayers;
 
 import lombok.Getter;
 
@@ -29,7 +29,6 @@ public class TechUtils {
 	
 	public static void setDebug(boolean debug) {
 		TechUtils.debug = debug;
-		OfflinePlayers.setDebug(debug);
 	}
 	
 	

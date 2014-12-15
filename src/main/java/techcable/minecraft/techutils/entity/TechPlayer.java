@@ -13,11 +13,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import techcable.minecraft.offlineplayers.AdvancedOfflinePlayer;
 import techcable.minecraft.techutils.EasyCache;
 import techcable.minecraft.techutils.TechUtils;
 import techcable.minecraft.techutils.UUIDUtils;
 import techcable.minecraft.techutils.VelocityUtils;
+import techcable.minecraft.techutils.offlineplayers.AdvancedOfflinePlayer;
 
 import lombok.*;
 import lombok.experimental.Delegate;
