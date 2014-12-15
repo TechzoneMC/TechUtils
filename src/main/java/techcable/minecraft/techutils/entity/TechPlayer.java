@@ -7,6 +7,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import techcable.minecraft.offlineplayers.AdvancedOfflinePlayer;
+import techcable.minecraft.techutils.EasyCache;
 import techcable.minecraft.techutils.TechUtils;
 import techcable.minecraft.techutils.UUIDUtils;
 import techcable.minecraft.techutils.VelocityUtils;
@@ -14,9 +15,12 @@ import techcable.minecraft.techutils.VelocityUtils;
 import lombok.*;
 
 @Getter
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access=AccessLevel.PRIVATE)
 public class TechPlayer {
 	private final UUID uuid;
+	private AdvancedOfflinePlayer advancedOfflinePlayer;
+	@Getter(AccessLevel.NONE)
+	private boolean advancedOfflinePlayerOnline;
 	
 	public String getName() {
 		return UUIDUtils.getName(getUuid());
@@ -27,7 +31,11 @@ public class TechPlayer {
 	}
 	
 	public AdvancedOfflinePlayer getAdvancedOfflinePlayer() {
-		return TechUtils.getAdvancedOfflinePlayer(getOfflinePlayer());
+		if (advancedOfflinePlayer == null || advancedOfflinePlayerOnline != isOnline()) {
+			advancedOfflinePlayer = TechUtils.getAdvancedOfflinePlayer(getOfflinePlayer());
+			advancedOfflinePlayerOnline = isOnline();
+		}
+		return advancedOfflinePlayer;
 	}
 	
 	public Player getPlayer() {
@@ -43,5 +51,17 @@ public class TechPlayer {
 		if (!isOnline()) return;
 		Player player = getPlayer();
 		player.setVelocity(VelocityUtils.knockback(getPlayer().getVelocity(), power));
+	}
+	
+	private static EasyCache<UUID, TechPlayer> techPlayerCache = new EasyCache<>(new EasyCache.Loader<UUID, TechPlayer>() {
+
+		@Override
+		public TechPlayer load(UUID key) {
+			return new TechPlayer(key);
+		}
+	
+	});
+	public static TechPlayer getTechPlayer(UUID id) {
+		return techPlayerCache.get(id);
 	}
 }
