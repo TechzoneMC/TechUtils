@@ -32,10 +32,10 @@ public class TechUtils {
 	}
 	
 	
-	public TechPlayer getTechPlayer(OfflinePlayer player) {
+	public static TechPlayer getTechPlayer(OfflinePlayer player) {
 		return getTechPlayer(player.getUniqueId());
 	}
-	public TechPlayer getTechPlayer(UUID id) {
+	public static TechPlayer getTechPlayer(UUID id) {
 		return TechPlayer.getTechPlayer(id);
 	}
 }
