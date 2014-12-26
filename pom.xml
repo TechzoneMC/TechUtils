@@ -56,6 +56,11 @@
 			<!-- Needed at compile time but not runtime -->
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>18.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -74,15 +79,19 @@
 							<relocations>
 								<relocation>
 									<pattern>org.spacehq.opennbt</pattern>
-									<shadedPattern>techcable.minecraft.techutils.libs.org.spacehq.opennbt</shadedPattern>
+									<shadedPattern>techcable.minecraft.techutils.libs.opennbt</shadedPattern>
 								</relocation>
 								<relocation>
 									<pattern>techcable.minecraft.factionsapi</pattern>
-									<shadedPattern>techcable.minecraft.techutils.libs.techcable.minecraft.factionsapi</shadedPattern>
+									<shadedPattern>techcable.minecraft.techutils.libs.factionsapi</shadedPattern>
 								</relocation>
 								<relocation>
 									<pattern>com.turt2live.uuid</pattern>
-									<shadedPattern>techcable.minecraft.techutils.libs.com.turt2live.uuid</shadedPattern>
+									<shadedPattern>techcable.minecraft.techutils.libs.uuid</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>com.google.common</pattern>
+									<shadedPattern>techcable.minecraft.techutils.libs.guava</shadedPattern>
 								</relocation>
 							</relocations>
 						</configuration>

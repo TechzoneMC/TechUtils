@@ -13,11 +13,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import techcable.minecraft.techutils.EasyCache;
 import techcable.minecraft.techutils.TechUtils;
 import techcable.minecraft.techutils.UUIDUtils;
 import techcable.minecraft.techutils.VelocityUtils;
 import techcable.minecraft.techutils.offlineplayers.AdvancedOfflinePlayer;
+import techcable.minecraft.techutils.utils.EasyCache;
 
 import lombok.*;
 import lombok.experimental.Delegate;
@@ -112,7 +112,7 @@ public class TechPlayer {
 	
 	//Cache
 	
-	private static EasyCache<UUID, TechPlayer> techPlayerCache = new EasyCache<>(new EasyCache.Loader<UUID, TechPlayer>() {
+	private static EasyCache<UUID, TechPlayer> techPlayerCache = EasyCache.makeCache(new EasyCache.Loader<UUID, TechPlayer>() {
 
 		@Override
 		public TechPlayer load(UUID key) {

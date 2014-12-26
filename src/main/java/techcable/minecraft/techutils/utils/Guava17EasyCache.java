@@ -1,4 +1,4 @@
-package techcable.minecraft.techutils;
+package techcable.minecraft.techutils.utils;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -7,19 +7,17 @@ import com.google.common.cache.LoadingCache;
 import lombok.*;
 
 @Getter
-public class EasyCache<K, V> {
-    private final LoadingCache<K, V> backing;
-    public EasyCache(Loader<K, V> loader) {
+public class Guava17EasyCache<K, V> extends EasyCache<K, V> {
+	private final LoadingCache<K, V> backing;
+    public Guava17EasyCache(Loader<K, V> loader) {
         backing = CacheBuilder.newBuilder().weakKeys().weakValues().build(new LoaderCacheLoader<K, V>(loader));
     }
     
+    @Override
     public V get(K key) {
         return backing.getUnchecked(key);
     }
     
-    public static interface Loader<K, V> {
-        public V load(K key);
-    }
     
     @Getter
     private static class LoaderCacheLoader<K, V> extends CacheLoader<K, V> {
