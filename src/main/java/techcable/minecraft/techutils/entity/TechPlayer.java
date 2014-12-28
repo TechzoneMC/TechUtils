@@ -23,7 +23,7 @@ import lombok.*;
 import lombok.experimental.Delegate;
 
 @Getter
-@RequiredArgsConstructor(access=AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access=AccessLevel.PROTECTED)
 public class TechPlayer {
 	private final UUID uuid;
 	private AdvancedOfflinePlayer advancedOfflinePlayer;
