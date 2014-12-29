@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import techcable.minecraft.techutils.InventoryUtils;
 import techcable.minecraft.techutils.TechUtils;
 import techcable.minecraft.techutils.UUIDUtils;
 import techcable.minecraft.techutils.VelocityUtils;
@@ -63,19 +64,7 @@ public class TechPlayer {
 	}
 	
 	public void copyTo(AdvancedOfflinePlayer target) {
-		 load(); 
-		 target.setItems(getItems());
-		 target.setArmor(getArmor());
-		 target.setExp(getExp());
-		 target.setLevel(getLevel());
-		 target.setFoodLevel(getFoodLevel());
-		 target.addPotionEffects(getPotionEffects());
-		 target.setAir(getAir());
-		 target.setExhaustion(getExhaustion());
-		 target.setSaturation(getSaturation());
-		 target.setFireTicks(getFireTicks());
-		 target.setHealth(getHealth());
-		 target.save();
+		InventoryUtils.copy(getAdvancedOfflinePlayer(), target);
 	}
 	
 	public void copyFrom(TechPlayer source) {
@@ -89,19 +78,7 @@ public class TechPlayer {
 	}
 	
 	public void copyFrom(AdvancedOfflinePlayer source) {
-		source.load();
-		setItems(source.getItems());
-		setArmor(source.getArmor());
-		setExp(source.getExp());
-		setLevel(source.getLevel());
-		setFoodLevel(source.getFoodLevel());
-		addPotionEffects(source.getPotionEffects());
-		setAir(source.getAir());
-		setExhaustion(source.getExhaustion());
-		setSaturation(source.getSaturation());
-		setFireTicks(source.getFireTicks());
-		setHealth(source.getHealth());
-		save();
+		InventoryUtils.copy(source, getAdvancedOfflinePlayer());
 	}
 	
 	public void knockback(double power) {

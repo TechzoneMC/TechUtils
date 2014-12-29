@@ -120,6 +120,7 @@ public class OnlineAdvancedOfflinePlayer extends AbstractAdvancedOfflinePlayer {
     	//If i loaded it would override existing data
     }
     public void save() {
+    	getBacking().updateInventory();
     	getBacking().saveData();
     }
     //Potion Effects
