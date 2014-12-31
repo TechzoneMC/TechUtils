@@ -18,7 +18,6 @@ public class Guava17EasyCache<K, V> extends EasyCache<K, V> {
         return backing.getUnchecked(key);
     }
     
-    
     @Getter
     private static class LoaderCacheLoader<K, V> extends CacheLoader<K, V> {
         
