@@ -126,163 +126,163 @@ public class TechPlayer {
 	//Advanced Offline Player
 	
 	public ItemStack[] getArmor() {
-		return advancedOfflinePlayer.getArmor();
+		return getAdvancedOfflinePlayer().getArmor();
 	}
 
 	public ItemStack getHelmet() {
-		return advancedOfflinePlayer.getHelmet();
+		return getAdvancedOfflinePlayer().getHelmet();
 	}
 
 	public ItemStack getChestplate() {
-		return advancedOfflinePlayer.getChestplate();
+		return getAdvancedOfflinePlayer().getChestplate();
 	}
 
 	public ItemStack getLeggings() {
-		return advancedOfflinePlayer.getLeggings();
+		return getAdvancedOfflinePlayer().getLeggings();
 	}
 
 	public ItemStack getBoots() {
-		return advancedOfflinePlayer.getBoots();
+		return getAdvancedOfflinePlayer().getBoots();
 	}
 
 	public void setArmor(ItemStack[] armor) {
-		advancedOfflinePlayer.setArmor(armor);
+		getAdvancedOfflinePlayer().setArmor(armor);
 	}
 
 	public void setHelmet(ItemStack helmet) {
-		advancedOfflinePlayer.setHelmet(helmet);
+		getAdvancedOfflinePlayer().setHelmet(helmet);
 	}
 
 	public void setChestplate(ItemStack chestplate) {
-		advancedOfflinePlayer.setChestplate(chestplate);
+		getAdvancedOfflinePlayer().setChestplate(chestplate);
 	}
 
 	public void setLeggings(ItemStack leggings) {
-		advancedOfflinePlayer.setLeggings(leggings);
+		getAdvancedOfflinePlayer().setLeggings(leggings);
 	}
 
 	public void setBoots(ItemStack boots) {
-		advancedOfflinePlayer.setBoots(boots);
+		getAdvancedOfflinePlayer().setBoots(boots);
 	}
 
 	public float getExp() {
-		return advancedOfflinePlayer.getExp();
+		return getAdvancedOfflinePlayer().getExp();
 	}
 
 	public void setExp(float exp) {
-		advancedOfflinePlayer.setExp(exp);
+		getAdvancedOfflinePlayer().setExp(exp);
 	}
 
 	public int getLevel() {
-		return advancedOfflinePlayer.getLevel();
+		return getAdvancedOfflinePlayer().getLevel();
 	}
 
 	public void setLevel(int level) {
-		advancedOfflinePlayer.setLevel(level);
+		getAdvancedOfflinePlayer().setLevel(level);
 	}
 
 	public float getHealth() {
-		return advancedOfflinePlayer.getHealth();
+		return getAdvancedOfflinePlayer().getHealth();
 	}
 
 	public void setHealth(float health) {
-		advancedOfflinePlayer.setHealth(health);
+		getAdvancedOfflinePlayer().setHealth(health);
 	}
 
 	public int getFoodLevel() {
-		return advancedOfflinePlayer.getFoodLevel();
+		return getAdvancedOfflinePlayer().getFoodLevel();
 	}
 
 	public void setFoodLevel(int foodLevel) {
-		advancedOfflinePlayer.setFoodLevel(foodLevel);
+		getAdvancedOfflinePlayer().setFoodLevel(foodLevel);
 	}
 
 	public float getSaturation() {
-		return advancedOfflinePlayer.getSaturation();
+		return getAdvancedOfflinePlayer().getSaturation();
 	}
 
 	public void setSaturation(float saturation) {
-		advancedOfflinePlayer.setSaturation(saturation);
+		getAdvancedOfflinePlayer().setSaturation(saturation);
 	}
 
 	public float getExhaustion() {
-		return advancedOfflinePlayer.getExhaustion();
+		return getAdvancedOfflinePlayer().getExhaustion();
 	}
 
 	public void setExhaustion(float exhaustion) {
-		advancedOfflinePlayer.setExhaustion(exhaustion);
+		getAdvancedOfflinePlayer().setExhaustion(exhaustion);
 	}
 
 	public ItemStack[] getEnderchest() {
-		return advancedOfflinePlayer.getEnderchest();
+		return getAdvancedOfflinePlayer().getEnderchest();
 	}
 
 	public void setEnderchest(ItemStack[] enderchest) {
-		advancedOfflinePlayer.setEnderchest(enderchest);
+		getAdvancedOfflinePlayer().setEnderchest(enderchest);
 	}
 
 	public void setEnderchestItem(int slot, ItemStack item) {
-		advancedOfflinePlayer.setEnderchestItem(slot, item);
+		getAdvancedOfflinePlayer().setEnderchestItem(slot, item);
 	}
 
 	public ItemStack getEnderchestItem(int slot) {
-		return advancedOfflinePlayer.getEnderchestItem(slot);
+		return getAdvancedOfflinePlayer().getEnderchestItem(slot);
 	}
 
 	public ItemStack[] getItems() {
-		return advancedOfflinePlayer.getItems();
+		return getAdvancedOfflinePlayer().getItems();
 	}
 
 	public void setItems(ItemStack[] items) {
-		advancedOfflinePlayer.setItems(items);
+		getAdvancedOfflinePlayer().setItems(items);
 	}
 
 	public ItemStack getItem(int slot) {
-		return advancedOfflinePlayer.getItem(slot);
+		return getAdvancedOfflinePlayer().getItem(slot);
 	}
 
 	public void setItem(int slot, ItemStack item) {
-		advancedOfflinePlayer.setItem(slot, item);
+		getAdvancedOfflinePlayer().setItem(slot, item);
 	}
 
 	public int getFireTicks() {
-		return advancedOfflinePlayer.getFireTicks();
+		return getAdvancedOfflinePlayer().getFireTicks();
 	}
 
 	public void setFireTicks(int ticks) {
-		advancedOfflinePlayer.setFireTicks(ticks);
+		getAdvancedOfflinePlayer().setFireTicks(ticks);
 	}
 
 	public int getAir() {
-		return advancedOfflinePlayer.getAir();
+		return getAdvancedOfflinePlayer().getAir();
 	}
 
 	public void setAir(int air) {
-		advancedOfflinePlayer.setAir(air);
+		getAdvancedOfflinePlayer().setAir(air);
 	}
 
 	public World getWorld() {
-		return advancedOfflinePlayer.getWorld();
+		return getAdvancedOfflinePlayer().getWorld();
 	}
 
 	public Location getLocation() {
-		return advancedOfflinePlayer.getLocation();
+		return getAdvancedOfflinePlayer().getLocation();
 	}
 
 	public void addPotionEffect(PotionEffect effect) {
-		advancedOfflinePlayer.addPotionEffect(effect);
+		getAdvancedOfflinePlayer().addPotionEffect(effect);
 	}
 
 	public void addPotionEffects(Collection<PotionEffect> effects) {
-		advancedOfflinePlayer.addPotionEffects(effects);
+		getAdvancedOfflinePlayer().addPotionEffects(effects);
 	}
 
 	public List<PotionEffect> getPotionEffects() {
-		return advancedOfflinePlayer.getPotionEffects();
+		return getAdvancedOfflinePlayer().getPotionEffects();
 	}
 
 	public void removePotionEffect(PotionEffectType type) {
-		advancedOfflinePlayer.removePotionEffect(type);
+		getAdvancedOfflinePlayer().removePotionEffect(type);
 	}
 	
 	public void save() {
