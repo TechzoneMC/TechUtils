@@ -8,6 +8,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<repositories>
+                <repository>
+                        <id>spigotmc-repo</id>
+                        <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+                </repository>
 		<repository>
 			<id>spacehq-releases</id>
 			<url>http://repo.spacehq.org/content/repositories/release/</url>
@@ -52,11 +56,6 @@
 			<!-- Needed at compile time but not runtime -->
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>18.0</version>
-		</dependency>
 	</dependencies>
 
 	<build>
@@ -84,10 +83,6 @@
 								<relocation>
 									<pattern>com.turt2live.uuid</pattern>
 									<shadedPattern>techcable.minecraft.techutils.libs.uuid</shadedPattern>
-								</relocation>
-								<relocation>
-									<pattern>com.google.common</pattern>
-									<shadedPattern>techcable.minecraft.techutils.libs.guava</shadedPattern>
 								</relocation>
 							</relocations>
 						</configuration>
