@@ -10,15 +10,6 @@
   <name>OfflinePlayers Parent</name>
   <packaging>pom</packaging>
   
-  <dependencies>
-  	<dependency>
-  		<groupId>net.techcable.minecraft.techutils</groupId>
-  		<artifactId>core</artifactId>
-  		<version>${project.version}</version>
-  		<scope>provided</scope>
-  	</dependency>
-  </dependencies>
-  
   <modules>
     <module>api</module>
     <module>base</module>

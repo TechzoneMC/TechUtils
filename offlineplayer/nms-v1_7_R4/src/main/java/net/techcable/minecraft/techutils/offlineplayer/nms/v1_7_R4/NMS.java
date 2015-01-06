@@ -11,15 +11,14 @@ import net.minecraft.util.com.mojang.authlib.GameProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
+import org.bukkit.craftbukkit.v1_7_R4.util.MojangNameLookup;
 import org.bukkit.entity.Player;
-
-import techcable.minecraft.techutils.UUIDUtils;
 
 public class NMS implements net.techcable.minecraft.techutils.offlineplayer.NMS {
 
 	@Override
 	public Player loadFromFile(UUID playerId) {
-		GameProfile profile = new GameProfile(playerId, UUIDUtils.getName(playerId));
+		GameProfile profile = new GameProfile(playerId, MojangNameLookup.lookupName(playerId));
 		MinecraftServer server = getHandle(Bukkit.getServer());
 		WorldServer world = server.getWorldServer(0);
 		PlayerInteractManager interactManager = new PlayerInteractManager(world);

@@ -5,7 +5,6 @@ import net.techcable.minecraft.techutils.offlineplayer.PlayerData;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import techcable.minecraft.techutils.offlineplayers.AdvancedOfflinePlayer;
 import lombok.*;
 
 @Getter

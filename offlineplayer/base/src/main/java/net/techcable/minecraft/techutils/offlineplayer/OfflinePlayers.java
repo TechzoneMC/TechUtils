@@ -40,7 +40,7 @@ public class OfflinePlayers {
     	if (nms == null) {
     		try {
         		String version = getVersion();
-        		Class<?> rawClass = Class.forName("techcable.minecraft.npclib.nms.versions." + version + ".NMS");
+        		Class<?> rawClass = Class.forName("net.techcable.minecraft.techutils.offlineplayer.nms." + version + ".NMS");
         		Class<? extends NMS> nmsClass = rawClass.asSubclass(NMS.class);
         		Constructor<? extends NMS> constructor = nmsClass.getConstructor();
         		return constructor.newInstance();

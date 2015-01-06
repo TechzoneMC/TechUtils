@@ -9,12 +9,9 @@ import net.minecraft.server.v1_8_R1.WorldServer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
-import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R1.util.MojangNameLookup;
 import org.bukkit.entity.Player;
-
-import techcable.minecraft.techutils.UUIDUtils;
 
 import com.mojang.authlib.GameProfile;
 
@@ -22,7 +19,7 @@ public class NMS implements net.techcable.minecraft.techutils.offlineplayer.NMS 
 
 	@Override
 	public Player loadFromFile(UUID playerId) {
-		GameProfile profile = new GameProfile(playerId, UUIDUtils.getName(playerId));
+		GameProfile profile = new GameProfile(playerId, MojangNameLookup.lookupName(playerId));
 		MinecraftServer server = getHandle(Bukkit.getServer());
 		WorldServer world = server.getWorldServer(0);
 		PlayerInteractManager interactManager = new PlayerInteractManager(world);
