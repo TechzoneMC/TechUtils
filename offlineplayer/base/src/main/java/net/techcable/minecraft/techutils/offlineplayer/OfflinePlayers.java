@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import com.google.common.base.Throwables;
@@ -26,6 +27,14 @@ public class OfflinePlayers {
 			player = loadPlayer(uuid);
 		}
 		return new PlayerPlayerData(player);
+	}
+	
+	public static PlayerData getData(OfflinePlayer player) {
+		if (player instanceof Player) {
+			return new PlayerPlayerData((Player)player);
+		} else {
+			return getData(player.getUniqueId());
+		}
 	}
 	
 	protected static Player loadPlayer(UUID id) {

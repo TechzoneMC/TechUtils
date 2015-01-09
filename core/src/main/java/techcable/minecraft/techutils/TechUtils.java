@@ -23,7 +23,7 @@ public class TechUtils {
 	}
 	
 	public static PlayerData getPlayerData(OfflinePlayer player) {
-		return getPlayerData(player.getUniqueId());
+		return OfflinePlayers.getData(player);
 	}
 	
 	public static void setDebug(boolean debug) {

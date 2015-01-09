@@ -46,9 +46,10 @@ public class TechPlayer {
 		return Bukkit.getOfflinePlayer(getUuid());
 	}
 	
-	public PlayerData getAdvancedOfflinePlayer() {
+	public PlayerData getPlayerData() {
 		if (playerData == null || playerDataOnline != isOnline()) {
 			playerData = TechUtils.getPlayerData(getOfflinePlayer());
+			playerDataOnline = isOnline();
 		}
 		return playerData;
 	}
@@ -75,7 +76,7 @@ public class TechPlayer {
 	
 	public void copyTo(TechPlayer target) {
 		if (target.isOnline()) copyTo(target.getPlayer());
-		else copyTo(target.getAdvancedOfflinePlayer());
+		else copyTo(target.getPlayerData());
 	}
 	
 	public void copyTo(Player target) {
@@ -84,12 +85,11 @@ public class TechPlayer {
 	}
 	
 	public void copyTo(PlayerData target) {
-		InventoryUtils.copy(getAdvancedOfflinePlayer(), target);
+		InventoryUtils.copy(getPlayerData(), target);
 	}
 	
 	public void copyFrom(TechPlayer source) {
-		if (source.isOnline()) copyFrom(source.getPlayer());
-		else copyFrom(source.getAdvancedOfflinePlayer());
+		copyFrom(source.getPlayerData());
 	}
 	
 	public void copyFrom(Player source) {
@@ -98,7 +98,7 @@ public class TechPlayer {
 	}
 	
 	public void copyFrom(PlayerData source) {
-		InventoryUtils.copy(source, getAdvancedOfflinePlayer());
+		InventoryUtils.copy(source, getPlayerData());
 	}
 	
 	public void knockback(double power) {
@@ -127,169 +127,169 @@ public class TechPlayer {
 	//Advanced Offline Player
 	
 	public ItemStack[] getArmor() {
-		return getAdvancedOfflinePlayer().getArmor();
+		return getPlayerData().getArmor();
 	}
 
 	public ItemStack getHelmet() {
-		return getAdvancedOfflinePlayer().getHelmet();
+		return getPlayerData().getHelmet();
 	}
 
 	public ItemStack getChestplate() {
-		return getAdvancedOfflinePlayer().getChestplate();
+		return getPlayerData().getChestplate();
 	}
 
 	public ItemStack getLeggings() {
-		return getAdvancedOfflinePlayer().getLeggings();
+		return getPlayerData().getLeggings();
 	}
 
 	public ItemStack getBoots() {
-		return getAdvancedOfflinePlayer().getBoots();
+		return getPlayerData().getBoots();
 	}
 
 	public void setArmor(ItemStack[] armor) {
-		getAdvancedOfflinePlayer().setArmor(armor);
+		getPlayerData().setArmor(armor);
 	}
 
 	public void setHelmet(ItemStack helmet) {
-		getAdvancedOfflinePlayer().setHelmet(helmet);
+		getPlayerData().setHelmet(helmet);
 	}
 
 	public void setChestplate(ItemStack chestplate) {
-		getAdvancedOfflinePlayer().setChestplate(chestplate);
+		getPlayerData().setChestplate(chestplate);
 	}
 
 	public void setLeggings(ItemStack leggings) {
-		getAdvancedOfflinePlayer().setLeggings(leggings);
+		getPlayerData().setLeggings(leggings);
 	}
 
 	public void setBoots(ItemStack boots) {
-		getAdvancedOfflinePlayer().setBoots(boots);
+		getPlayerData().setBoots(boots);
 	}
 
 	public float getExp() {
-		return getAdvancedOfflinePlayer().getExp();
+		return getPlayerData().getExp();
 	}
 
 	public void setExp(float exp) {
-		getAdvancedOfflinePlayer().setExp(exp);
+		getPlayerData().setExp(exp);
 	}
 
 	public int getLevel() {
-		return getAdvancedOfflinePlayer().getLevel();
+		return getPlayerData().getLevel();
 	}
 
 	public void setLevel(int level) {
-		getAdvancedOfflinePlayer().setLevel(level);
+		getPlayerData().setLevel(level);
 	}
 
 	public float getHealth() {
-		return getAdvancedOfflinePlayer().getHealth();
+		return getPlayerData().getHealth();
 	}
 
 	public void setHealth(float health) {
-		getAdvancedOfflinePlayer().setHealth(health);
+		getPlayerData().setHealth(health);
 	}
 
 	public int getFoodLevel() {
-		return getAdvancedOfflinePlayer().getFoodLevel();
+		return getPlayerData().getFoodLevel();
 	}
 
 	public void setFoodLevel(int foodLevel) {
-		getAdvancedOfflinePlayer().setFoodLevel(foodLevel);
+		getPlayerData().setFoodLevel(foodLevel);
 	}
 
 	public float getSaturation() {
-		return getAdvancedOfflinePlayer().getSaturation();
+		return getPlayerData().getSaturation();
 	}
 
 	public void setSaturation(float saturation) {
-		getAdvancedOfflinePlayer().setSaturation(saturation);
+		getPlayerData().setSaturation(saturation);
 	}
 
 	public float getExhaustion() {
-		return getAdvancedOfflinePlayer().getExhaustion();
+		return getPlayerData().getExhaustion();
 	}
 
 	public void setExhaustion(float exhaustion) {
-		getAdvancedOfflinePlayer().setExhaustion(exhaustion);
+		getPlayerData().setExhaustion(exhaustion);
 	}
 
 	public ItemStack[] getEnderchest() {
-		return getAdvancedOfflinePlayer().getEnderchest();
+		return getPlayerData().getEnderchest();
 	}
 
 	public void setEnderchest(ItemStack[] enderchest) {
-		getAdvancedOfflinePlayer().setEnderchest(enderchest);
+		getPlayerData().setEnderchest(enderchest);
 	}
 
 	public void setEnderchestItem(int slot, ItemStack item) {
-		getAdvancedOfflinePlayer().setEnderchestItem(slot, item);
+		getPlayerData().setEnderchestItem(slot, item);
 	}
 
 	public ItemStack getEnderchestItem(int slot) {
-		return getAdvancedOfflinePlayer().getEnderchestItem(slot);
+		return getPlayerData().getEnderchestItem(slot);
 	}
 
 	public ItemStack[] getItems() {
-		return getAdvancedOfflinePlayer().getItems();
+		return getPlayerData().getItems();
 	}
 
 	public void setItems(ItemStack[] items) {
-		getAdvancedOfflinePlayer().setItems(items);
+		getPlayerData().setItems(items);
 	}
 
 	public ItemStack getItem(int slot) {
-		return getAdvancedOfflinePlayer().getItem(slot);
+		return getPlayerData().getItem(slot);
 	}
 
 	public void setItem(int slot, ItemStack item) {
-		getAdvancedOfflinePlayer().setItem(slot, item);
+		getPlayerData().setItem(slot, item);
 	}
 
 	public int getFireTicks() {
-		return getAdvancedOfflinePlayer().getFireTicks();
+		return getPlayerData().getFireTicks();
 	}
 
 	public void setFireTicks(int ticks) {
-		getAdvancedOfflinePlayer().setFireTicks(ticks);
+		getPlayerData().setFireTicks(ticks);
 	}
 
 	public int getAir() {
-		return getAdvancedOfflinePlayer().getAir();
+		return getPlayerData().getAir();
 	}
 
 	public void setAir(int air) {
-		getAdvancedOfflinePlayer().setAir(air);
+		getPlayerData().setAir(air);
 	}
 
 	public World getWorld() {
-		return getAdvancedOfflinePlayer().getWorld();
+		return getPlayerData().getWorld();
 	}
 
 	public Location getLocation() {
-		return getAdvancedOfflinePlayer().getLocation();
+		return getPlayerData().getLocation();
 	}
 
 	public void addPotionEffect(PotionEffect effect) {
-		getAdvancedOfflinePlayer().addPotionEffect(effect);
+		getPlayerData().addPotionEffect(effect);
 	}
 
 	public void addPotionEffects(Collection<PotionEffect> effects) {
-		getAdvancedOfflinePlayer().addPotionEffects(effects);
+		getPlayerData().addPotionEffects(effects);
 	}
 
 	public Collection<PotionEffect> getPotionEffects() {
-		return getAdvancedOfflinePlayer().getPotionEffects();
+		return getPlayerData().getPotionEffects();
 	}
 
 	public void removePotionEffect(PotionEffectType type) {
-		getAdvancedOfflinePlayer().removePotionEffect(type);
+		getPlayerData().removePotionEffect(type);
 	}
 	
 	public void save() {
-		getAdvancedOfflinePlayer().save();
+		getPlayerData().save();
 	}
 	public void load() {
-		getAdvancedOfflinePlayer().load();
+		getPlayerData().load();
 	}
 }
