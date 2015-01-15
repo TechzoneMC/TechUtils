@@ -63,7 +63,8 @@ public class TechPlayer {
 	}
 	@SuppressWarnings("unchecked")
 	public <T> T getMetadata(String key) {
-		MetadataValue metadata = getPlayer().getMetadata(plugin.getMetadataBase() + key).get(1);
+	    if (!hasMetadata(key)) return null;
+	    MetadataValue metadata = getPlayer().getMetadata(plugin.getMetadataBase() + key).get(1);
 	    return (T) metadata.value();
 	}
 	public void setMetadata(String key, Object value) {
@@ -73,8 +74,8 @@ public class TechPlayer {
 	public void clearMetadata(String key) {
 	    getPlayer().removeMetadata(getPlugin().getMetadataBase() + key, getPlugin()); 
 	}
-	public void hasMetadata(String key) {
-	    getPlayer().hasMetadata(getPlugin().getMetadataBase() + key);
+	public boolean hasMetadata(String key) {
+	    return getPlayer().hasMetadata(getPlugin().getMetadataBase() + key);
 	}
 	
 	public OfflinePlayer getOfflinePlayer() {
