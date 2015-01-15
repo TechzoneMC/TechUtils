@@ -34,13 +34,15 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.google.common.base.Preconditions;
 
 import techcable.minecraft.techutils.InventoryUtils;
-import techcable.minecraft.techutils.TechUtils;
+import techcable.minecraft.techutils.TechPlugin;
 import techcable.minecraft.techutils.UUIDUtils;
 import techcable.minecraft.techutils.VelocityUtils;
 import techcable.minecraft.techutils.scoreboard.ScoreboardProvider;
@@ -52,16 +54,27 @@ import lombok.*;
 @RequiredArgsConstructor(access=AccessLevel.PROTECTED)
 public class TechPlayer {
 	private final UUID uuid;
+	private final TechPlugin<?> plugin;
 	private PlayerData playerData;
 	private boolean playerDataOnline;
 	
 	public String getName() {
 		return UUIDUtils.getName(getUuid());
 	}
-	
 	@SuppressWarnings("unchecked")
 	public <T> T getMetadata(String key) {
-		return (T) Bukkit.getPlayer(getUuid()).getMetadata("techutils." + key).get(0); //Assume we are unique
+		MetadataValue metadata = getPlayer().getMetadata(plugin.getMetadataBase() + key).get(1);
+	    return (T) metadata.value();
+	}
+	public void setMetadata(String key, Object value) {
+	    MetadataValue metadata = new FixedMetadataValue(plugin, value);
+	    getPlayer().setMetadata(getPlugin().getMetadataBase() + key, metadata);
+	}
+	public void clearMetadata(String key) {
+	    getPlayer().removeMetadata(getPlugin().getMetadataBase() + key, getPlugin()); 
+	}
+	public void hasMetadata(String key) {
+	    getPlayer().hasMetadata(getPlugin().getMetadataBase() + key);
 	}
 	
 	public OfflinePlayer getOfflinePlayer() {
@@ -70,7 +83,7 @@ public class TechPlayer {
 	
 	public PlayerData getPlayerData() {
 		if (playerData == null || playerDataOnline != isOnline()) {
-			playerData = TechUtils.getPlayerData(getOfflinePlayer());
+			playerData = getPlugin().getPlayerData(getOfflinePlayer());
 			playerDataOnline = isOnline();
 		}
 		return playerData;
@@ -102,7 +115,7 @@ public class TechPlayer {
 	}
 	
 	public void copyTo(Player target) {
-		copyTo(TechUtils.getPlayerData(target));
+		copyTo(getPlugin().getPlayerData(target));
 		target.updateInventory();
 	}
 	
@@ -115,7 +128,7 @@ public class TechPlayer {
 	}
 	
 	public void copyFrom(Player source) {
-		copyFrom(TechUtils.getPlayerData(source));
+		copyFrom(getPlugin().getPlayerData(source));
 		if (isOnline()) getPlayer().updateInventory();
 	}
 	
@@ -129,20 +142,9 @@ public class TechPlayer {
 		player.setVelocity(VelocityUtils.knockback(getPlayer().getVelocity(), power));
 	}
 	
-	//Cache
-	
-	private static EasyCache<UUID, TechPlayer> techPlayerCache = EasyCache.makeCache(new EasyCache.Loader<UUID, TechPlayer>() {
-
-		@Override
-		public TechPlayer load(UUID key) {
-			return new TechPlayer(key);
-		}
-	
-	});
-	public static TechPlayer getTechPlayer(UUID id) {
-		return techPlayerCache.get(id);
+	public void emptyInventory() {
+	    InventoryUtils.emptyInventory(getPlayerData());
 	}
-	
 	//Delegates
 	
 	

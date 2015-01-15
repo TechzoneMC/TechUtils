@@ -40,7 +40,7 @@ public class NMS implements net.techcable.minecraft.techutils.offlineplayer.NMS 
 
 	@Override
 	public Player loadFromFile(UUID playerId) {
-		GameProfile profile = new GameProfile(playerId, MojangNameLookup.lookupName(playerId));
+		GameProfile profile = new GameProfile(playerId, getName(playerId));
 		MinecraftServer server = getHandle(Bukkit.getServer());
 		WorldServer world = server.getWorldServer(0);
 		PlayerInteractManager interactManager = new PlayerInteractManager(world);
@@ -53,6 +53,14 @@ public class NMS implements net.techcable.minecraft.techutils.offlineplayer.NMS 
 			return ((CraftServer)server).getServer();
 		}
 		return null;
+	}
+	
+	private static String getName(UUID id) {
+	    if (!Bukkit.getOnlineMode()) {
+	        return Bukkit.getOfflinePlayer(id).getName();
+	    } else {
+	        return MojangNameLookup.lookupName(id);
+	    }
 	}
 
 }
