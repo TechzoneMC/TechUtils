@@ -1,7 +1,10 @@
 package techcable.minecraft.techutils;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
+import net.techcable.techutils.config.Configuration;
 import net.techcable.minecraft.techutils.offlineplayer.OfflinePlayers;
 import net.techcable.minecraft.techutils.offlineplayer.PlayerData;
 
@@ -32,6 +35,32 @@ public abstract class TechPlugin<T extends TechPlayer> extends JavaPlugin {
     public PlayerData getPlayerData(OfflinePlayer player) {
         return OfflinePlayers.getData(player);
     }
+    public Class<? extends Configuration> getConfigClass(String id) {
+        if (id == null) { //Main
+            return getMainConfigClass();
+        }
+        return null;
+    }
+    protected abstract Class<? extends Configuration> getMainConfigClass();
+    
+    private HashMap<String, Configuration> configMap = new HashMap<>();
+    public Configuration getConfig(String id) {
+        if (configMap.containsKey(id)) return configMap.get(id);
+        Class<? extends Configuration> configClass = getConfigClass(id);
+        if (configClass == null) return null; //Not supported
+        try {
+            Configuration config = configClass.newInstance();
+            configMap.put(id, config);
+            return config;
+        } catch (Exception ex) {
+            return null; //Must have no args constructor
+        }
+    }
+    
+    public Configuration getMainConfig() {
+        return getConfig(null);
+    }
+    
     public String getMetadataBase() {
         return "techutils." + getName() + ".";
     }
