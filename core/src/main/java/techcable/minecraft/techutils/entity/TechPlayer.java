@@ -45,8 +45,6 @@ import techcable.minecraft.techutils.InventoryUtils;
 import techcable.minecraft.techutils.TechPlugin;
 import techcable.minecraft.techutils.UUIDUtils;
 import techcable.minecraft.techutils.VelocityUtils;
-import techcable.minecraft.techutils.scoreboard.ScoreboardProvider;
-import techcable.minecraft.techutils.scoreboard.TechScoreboard;
 import techcable.minecraft.techutils.utils.EasyCache;
 import lombok.*;
 
@@ -93,17 +91,6 @@ public class TechPlayer {
 	public Player getPlayer() {
 		if (!isOnline()) throw new RuntimeException("not online");
 		return Bukkit.getPlayer(getUuid());
-	}
-	
-	public void setScoreboardProvider(ScoreboardProvider provider) {
-		if (getScoreboard() == null && TechScoreboard.isSupported()) {
-			TechScoreboard.createScoreboard(this);
-		}
-		getScoreboard().setProvider(provider);
-	}
-	public TechScoreboard getScoreboard() {
-		if (!TechScoreboard.isSupported()) return null;
-		return TechScoreboard.getScoreboard(this);
 	}
 	
 	public boolean isOnline() {
