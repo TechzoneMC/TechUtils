@@ -31,6 +31,23 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+/**
+ * Represents a player's data
+ * 
+ * This includes
+ * <ul>
+ *  <li>Inventory</li>
+ *  <li>Armor</li>
+ *  <li>Experience</li>
+ *  <li>Health</li>
+ *  <li>Food</li>
+ *  <li>Enderchest</li>
+ *  <li>Fire Time</li>
+ *  <li>Air Time</li>
+ *  <li>Location</li>
+ *  <li>Potion Effects</li>
+ * </ul>
+ */
 public interface PlayerData {
 	   //Armor Getting and Setting Methods
     public ItemStack[] getArmor();
