@@ -3,14 +3,14 @@ TechUtils
 
 Provides various utitlities for plugins:
 - Loading of offline players
-- Easy config api
 - UUID lookup
 
 TODO: (in order of priority)
-- [ ] Javadocs
+- [x] Javadocs
+- [ ] Easy config api
 - [ ] Easy scoreboard api
 - [ ] Anotation based command system
-- [ ] Reflection based loading of offline players
+- [x] Reflection based loading of offline players
 
 
 ##Usage
@@ -18,15 +18,20 @@ TechUtils is centered around TechPlugin and TechPlayer
 ExamplePlugin:
 ````java
 public class ExamplePlugin extends TechPlugin<ExamplePlayer> {
-
+    
     @Override
-    public TechPlayerFactory<ExamplePlayer> getPlayerFactory() {
-        return new TechPlayerFactory<ExamplePlayer>() {
-            @Override
-            public T createPlayer(UUID id, TechPlugin<T> plugin) {
-                return new ExamplePlayer(id, (ExamplePlugin)plugin);
-            }
-        }
+    public void startup() {
+        System.out.println("Startup");
+    }
+    
+    @Override
+    public void shutdown() {
+        System.out.println("Shutdown");
+    }
+    
+    @Override
+    public ExamplePlayer createPlayer(UUID id) {
+        return new ExamplePlayer(id, this);
     }
 
 }
