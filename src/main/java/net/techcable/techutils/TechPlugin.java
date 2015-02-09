@@ -57,7 +57,7 @@ public abstract class TechPlugin<T extends TechPlayer> extends JavaPlugin {
      * @throws ClassCastException if you add custom players and don't overide this method
      */
     public T createPlayer(UUID id) {
-        assert playerManager.isKnown(id) : "This player has already been created!";
+        assert !playerManager.isKnown(id) : "This player has already been created!";
         return (T) new TechPlayer(id, this);
     }
     
