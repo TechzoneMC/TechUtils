@@ -80,4 +80,22 @@ public abstract class TechPlugin<T extends TechPlayer> extends JavaPlugin {
     public void registerListener(Listener listener) {
         getServer().getPluginManager().registerEvents(listener, this);
     }
+    
+    //Logging
+    
+    public void severe(String format, Object... args) {
+        Bukkit.getLogger().severe(getPrefix() + String.format(format, args));
+    }
+    
+    public void warning(String format, Object... args) {
+        Bukkit.getLogger().warning(getPrefix() + String.format(format, args));
+    }
+    
+    public void info(String format, Object... args) {
+        Bukkit.getLogger().info(getPrefix() + String.format(format, args));
+    }
+    
+    private String getPrefix() {
+        return "[" + getName() + "] ";
+    }
 }
