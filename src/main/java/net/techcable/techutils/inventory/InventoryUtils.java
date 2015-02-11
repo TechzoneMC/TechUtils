@@ -1,6 +1,10 @@
 package net.techcable.techutils.inventory;
 
+import java.util.UUID;
+
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class InventoryUtils {
     private InventoryUtils() {}

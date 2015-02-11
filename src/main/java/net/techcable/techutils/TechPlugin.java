@@ -1,8 +1,12 @@
 package net.techcable.techutils;
 
+import java.util.UUID;
+
 import net.techcable.techutils.entity.TechPlayer;
 import net.techcable.techutils.entity.PlayerManager;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -12,7 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public abstract class TechPlugin<T extends TechPlayer> extends JavaPlugin {
     
-    private final PlayerManager<T> playerManager;
+    private PlayerManager<T> playerManager;
     
     /**
      * Startup techutils
@@ -46,7 +50,7 @@ public abstract class TechPlugin<T extends TechPlayer> extends JavaPlugin {
     }
     
     public T getPlayer(Player id) {
-        return playerManager.getPlayer(player);
+        return playerManager.getPlayer(id);
     }
     
     /**
@@ -56,7 +60,8 @@ public abstract class TechPlugin<T extends TechPlayer> extends JavaPlugin {
      * 
      * @throws ClassCastException if you add custom players and don't overide this method
      */
-    public T createPlayer(UUID id) {
+    @SuppressWarnings("unchecked")
+	public T createPlayer(UUID id) {
         assert !playerManager.isKnown(id) : "This player has already been created!";
         return (T) new TechPlayer(id, this);
     }

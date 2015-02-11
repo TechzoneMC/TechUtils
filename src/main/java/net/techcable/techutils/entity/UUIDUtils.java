@@ -29,7 +29,7 @@ public class UUIDUtils {
             if (profile == null) return null;
             return profile.getId();
         } else {
-            return UUID.nameUUIDFromBytes(("OfflinePlayer:" + getName()).getBytes(Charsets.UTF_8));
+            return UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(Charsets.UTF_8));
         }
     }
     
@@ -43,7 +43,7 @@ public class UUIDUtils {
      */
     public static String getName(UUID id) {
         if (Bukkit.getPlayer(id) != null) {
-            return Bukkit.getPlayer(name).getName();
+            return Bukkit.getPlayer(id).getName();
         }
         if (Bukkit.getOnlineMode()) {
             PlayerProfile profile = ProfileUtils.lookup(id);

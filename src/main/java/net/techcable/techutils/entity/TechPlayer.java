@@ -5,14 +5,13 @@ import java.util.UUID;
 import com.google.common.base.Preconditions;
 
 import net.techcable.techutils.TechPlugin;
-
 import lombok.*;
 
-@RequiredArgConstructor
+@RequiredArgsConstructor
 public class TechPlayer {
     private final UUID id;
     @SuppressWarnings("unchecked")
-    private final TechPlugin plugin;
+    private final TechPlugin<?> plugin;
     
     /**
      * Retreive this player's uuid

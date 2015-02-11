@@ -1,9 +1,14 @@
 package net.techcable.techutils.entity;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import lombok.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerKickEvent;
@@ -57,7 +62,7 @@ public class PlayerManager<T extends TechPlayer> implements Listener {
         if (!isKnown(playerEntity)) return;
         T player = getPlayer(playerEntity);
         player.destroy();
-        knownPlayer.remove(playerEntity.getUniqueId());
+        players.remove(playerEntity.getUniqueId());
     }
     
     @EventHandler(priority=EventPriority.MONITOR)
@@ -66,7 +71,7 @@ public class PlayerManager<T extends TechPlayer> implements Listener {
     }
     
     @EventHandler(priority=EventPriority.MONITOR)
-    public void onQuit(PlayerLeaveEvent event) {
+    public void onQuit(PlayerQuitEvent event) {
         onQuit(event.getPlayer());
     }
 }

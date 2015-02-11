@@ -1,13 +1,16 @@
 package net.techcable.techutils.config;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Throwables;
 import com.google.common.io.CharSink;
 import com.google.common.io.CharSource;
 import com.google.common.io.Files;
@@ -17,7 +20,7 @@ import lombok.*;
 
 public abstract class AnnotationConfig {
     @Getter(AccessLevel.PRIVATE)
-    private FileConfiguartion config;
+    private FileConfiguration config;
     
     /**
      * Retreive the path of the configuration file
@@ -32,13 +35,17 @@ public abstract class AnnotationConfig {
      * @return the default config path
      */
     public URL getDefaultConfigResource() {
-        return Resources.gerResource(getFile().getName());
+        return Resources.getResource(getFile().getName());
     }
     
     public void loadDefault() {
         CharSource source = Resources.asCharSource(getDefaultConfigResource(), Charsets.UTF_8);
-        CharSink sink = Files.asCharSkink(getFile(), Charsets.UTF_8);
-        source.copyTo(sink);
+        CharSink sink = Files.asCharSink(getFile(), Charsets.UTF_8);
+        try {
+			source.copyTo(sink);
+		} catch (Exception e) {
+			Throwables.propagate(e);
+		}
     }
     
     public void loadValues() {
@@ -50,7 +57,7 @@ public abstract class AnnotationConfig {
             try {
                 field.setAccessible(true);
                 
-                field.set(this, object);
+                field.set(this, value);
             } catch (Exception e) {
                 Bukkit.getLogger().log(Level.SEVERE, "Unable to set configuration value", e);
             }
@@ -65,7 +72,7 @@ public abstract class AnnotationConfig {
             try {
                 field.setAccessible(true);
                 
-                field.set(this, object);
+                value = field.get(this);
             } catch (Exception e) {
                 Bukkit.getLogger().log(Level.SEVERE, "Unable to retreive configuration value", e);
             }
