@@ -115,4 +115,12 @@ public class Reflection {
             return null;
         }
     }
+    
+    public static <T> Class<? extends T> getClass(String name, Class<T> superClass) {
+    	try {
+    		return Class.forName(name).asSubclass(superClass);
+    	} catch (ClassCastException | ClassNotFoundException ex) {
+    		return null;
+    	}
+    }
 }
