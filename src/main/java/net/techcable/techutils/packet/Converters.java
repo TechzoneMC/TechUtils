@@ -24,12 +24,12 @@ public class Converters {
 				if (nmsArray.length == 0) return "";
 				StringBuilder output = new StringBuilder();
 				for (Object nms : nmsArray) {
-					output.append(toWrapper(nms));
+					output.append(toWrapper0(nms));
 				}
 				return output.toString();
 			}
 			
-			private String toWrapper(Object nms) {
+			private String toWrapper0(Object nms) {
 				Class<?> craftChatMessage = getCbClass("util.CraftChatMessage");
 			    Method fromString = makeMethod(craftChatMessage, "fromString", getNmsClass("IChatBaseComponent"));
 			    return callMethod(fromString, null, nms);

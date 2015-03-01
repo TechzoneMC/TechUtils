@@ -290,4 +290,20 @@ class ProfileUtils {
             }
         }
     }
+    
+    public static void addToCache(UUID id, String name) {
+    	PlayerProfile profile = new PlayerProfile(id, name);
+    	nameCache.put(name, profile);
+    	idCache.put(id, profile);
+    }
+    
+    public static PlayerProfile getIfCached(String name) {
+    	if (!nameCache.contains(name)) return null;
+    	return nameCache.get(name);
+    }
+    
+    public static PlayerProfile getIfCached(UUID id) {
+    	if (!idCache.contains(id)) return null;
+    	return idCache.get(id);
+    }
 }

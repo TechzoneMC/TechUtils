@@ -40,6 +40,7 @@ public class PlayerManager<T extends TechPlayer> implements Listener {
     }
     
     public T getPlayer(UUID id) {
+    	if (Bukkit.getPlayer(id) == null) return null;
         if (!isKnown(id)) {
             T created = getPlugin().createPlayer(id);
             players.put(id, created);
