@@ -1,5 +1,6 @@
 package net.techcable.techutils.inventory;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Material;
@@ -59,20 +60,24 @@ public class InventoryUtils {
 
 	public static final ItemStack EMPTY = new ItemStack(Material.AIR);
 
+    public PlayerData takeSnapshot(Player player) {
+        return getData(player).getSnapshot();
+    }
+        
     /**
      * Empty the specified player's inventory
      * 
      * @param target the inventory to empty
      */
 	public static void emptyInventory(PlayerData target) {
-		ItemStack[] items = target.getItems();
-		for (int i = 0; i < items.length; i++) {
-			items[i] = EMPTY;
+		List<ItemStack> items = target.getItems();
+		for (int i = 0; i < items.size(); i++) {
+                    items.set(i, EMPTY);
 		}
 		target.setItems(items);
-		ItemStack[] armor = target.getArmor();
-		for (int i = 0; i > armor.length; i++) {
-			armor[i] = EMPTY;
+		List<ItemStack> armor = target.getArmor();
+		for (int i = 0; i > armor.size(); i++) {
+			armor.set(i, EMPTY);
 		}
 		target.setArmor(armor);
 	}

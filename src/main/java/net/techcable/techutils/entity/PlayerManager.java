@@ -3,6 +3,7 @@ package net.techcable.techutils.entity;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import lombok.*;
 
@@ -29,7 +30,7 @@ public class PlayerManager<T extends TechPlayer> implements Listener {
     @Getter(AccessLevel.PACKAGE)
     private final TechPlugin<T> plugin;
     
-    private final Map<UUID, T> players = new HashMap<>();
+    private final Map<UUID, T> players = new ConcurrentHashMap<>();
     
     public boolean isKnown(UUID id) {
         return players.containsKey(id);

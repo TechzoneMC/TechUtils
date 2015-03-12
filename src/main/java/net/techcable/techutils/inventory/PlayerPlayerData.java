@@ -22,7 +22,9 @@
  */
 package net.techcable.techutils.inventory;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,11 +41,6 @@ import org.bukkit.potion.PotionEffectType;
 @Getter
 class PlayerPlayerData implements PlayerData {
 	private Player player;
-
-	@Override
-	public ItemStack[] getArmor() {
-		return getInventory().getArmorContents();
-	}
 
 	@Override
 	public ItemStack getHelmet() {
@@ -63,11 +60,6 @@ class PlayerPlayerData implements PlayerData {
 	@Override
 	public ItemStack getBoots() {
 		return getInventory().getBoots();
-	}
-
-	@Override
-	public void setArmor(ItemStack[] armor) {
-		getInventory().setArmorContents(armor);
 	}
 
 	@Override
@@ -151,16 +143,6 @@ class PlayerPlayerData implements PlayerData {
 	}
 
 	@Override
-	public ItemStack[] getEnderchest() {
-		return getPlayer().getEnderChest().getContents();
-	}
-
-	@Override
-	public void setEnderchest(ItemStack[] enderchest) {
-		getPlayer().getEnderChest().setContents(enderchest);
-	}
-
-	@Override
 	public void setEnderchestItem(int slot, ItemStack item) {
 		getPlayer().getEnderChest().setItem(slot, item);
 	}
@@ -168,16 +150,6 @@ class PlayerPlayerData implements PlayerData {
 	@Override
 	public ItemStack getEnderchestItem(int slot) {
 		return getPlayer().getEnderChest().getItem(slot);
-	}
-
-	@Override
-	public ItemStack[] getItems() {
-		return getInventory().getContents();
-	}
-
-	@Override
-	public void setItems(ItemStack[] items) {
-		getInventory().setContents(items);
 	}
 
 	@Override
@@ -251,4 +223,39 @@ class PlayerPlayerData implements PlayerData {
 	public PlayerInventory getInventory() {
 		return getPlayer().getInventory();
 	}
+
+    @Override
+    public List<ItemStack> getArmor() {
+        return Arrays.asList(getPlayer().getInventory().getArmorContents());
+    }
+
+    @Override
+    public void setArmor(List<? extends ItemStack> armor) {
+        getPlayer().getInventory().setArmorContents(armor.toArray(new ItemStack[4]));
+    }
+
+    @Override
+    public List<ItemStack> getEnderchest() {
+        return Arrays.asList(getPlayer().getEnderChest().getContents());
+    }
+
+    @Override
+    public void setEnderchest(List<ItemStack> enderchest) {
+        getPlayer().getEnderChest().setContents(enderchest.toArray(new ItemStack[enderchest.size()]));
+    }
+
+    @Override
+    public List<ItemStack> getItems() {
+        return Arrays.asList(getInventory().getContents());
+    }
+
+    @Override
+    public void setItems(List<ItemStack> items) {
+        getPlayer().getInventory().setContents(items.toArray(new ItemStack[items.size()]));
+    }
+
+    @Override
+    public PlayerData getSnapshot() {
+        return new PlayerDataSnapshot(this);
+    }
 }

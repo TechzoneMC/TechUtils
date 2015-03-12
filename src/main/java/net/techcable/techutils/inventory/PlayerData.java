@@ -33,7 +33,9 @@ import org.bukkit.potion.PotionEffectType;
 
 /**
  * Represents a player's data
- * 
+ * <br>
+ * May be a immutable snapshot of the state of a player's inventory or just reflect the current state of the player
+ * <p>
  * This includes
  * <ul>
  *  <li>Inventory</li>
@@ -49,13 +51,13 @@ import org.bukkit.potion.PotionEffectType;
  * </ul>
  */
 public interface PlayerData {
-	   //Armor Getting and Setting Methods
-    public ItemStack[] getArmor();
+    //Armor0 Getting and Setting Methods
+    public List<ItemStack> getArmor();
     public ItemStack getHelmet();
     public ItemStack getChestplate();
     public ItemStack getLeggings();
     public ItemStack getBoots();
-    public void setArmor(ItemStack[] armor);
+    public void setArmor(List<? extends ItemStack> armor);
     public void setHelmet(ItemStack helmet);
     public void setChestplate(ItemStack chestplate);
     public void setLeggings(ItemStack leggings);
@@ -78,14 +80,14 @@ public interface PlayerData {
     public void setExhaustion(float exhaustion);
     
     //EnderChest
-    public ItemStack[] getEnderchest();
-    public void setEnderchest(ItemStack[] enderchest);
+    public List<ItemStack> getEnderchest();
+    public void setEnderchest(List<ItemStack> enderchest);
     public void setEnderchestItem(int slot, ItemStack item);
     public ItemStack getEnderchestItem(int slot);
     
     //Main Inventory
-    public ItemStack[] getItems();
-    public void setItems(ItemStack[] items);
+    public List<ItemStack> getItems();
+    public void setItems(List<ItemStack> items);
     public ItemStack getItem(int slot);
     public void setItem(int slot, ItemStack item);
     
@@ -108,4 +110,13 @@ public interface PlayerData {
     public void addPotionEffects(Collection<PotionEffect> effects);
     public Collection<PotionEffect> getPotionEffects();
     public void removePotionEffect(PotionEffectType type);
+    
+    /**
+     * Get an immutable snapshot of the current state of this player data
+     * <br>
+     * If this object is immutable may return itself
+     * 
+     * @return immutable snapshot of current state
+     */
+    public PlayerData getSnapshot();
 }
