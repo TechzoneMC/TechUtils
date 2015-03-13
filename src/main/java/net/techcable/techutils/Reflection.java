@@ -107,6 +107,16 @@ public class Reflection {
             throw new RuntimeException(ex);
         }
     }
+        
+    public static void setField(Field field, Object instance, Object value) {
+        if (field == null) throw new RuntimeException("No such field");
+        field.setAccessible(true);
+        try {
+            field.set(instance, value);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
     
     public static Class<?> getClass(String name) {
         try {
