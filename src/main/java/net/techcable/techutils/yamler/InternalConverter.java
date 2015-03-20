@@ -22,19 +22,19 @@ public class InternalConverter {
     public InternalConverter() {
         try {
             addConverter(Primitive.class);
-            addConverter(Config.class);
+            addConverter(net.techcable.techutils.yamler.converter.Config.class);
             addConverter(List.class);
             addConverter(Map.class);
             addConverter(Array.class);
             addConverter(Set.class);
         } catch (InvalidConverterException e) {
-            throw new IllegalStateException(e);
+            throw new IllegalStateException(e.getMessage(), e);
         }
     }
 
     public void addConverter(Class converter) throws InvalidConverterException {
         if (!Converter.class.isAssignableFrom(converter)) {
-            throw new InvalidConverterException("Converter does not implement the Interface Converter");
+            throw new InvalidConverterException(converter.getName() + " does not implement the Interface Converter");
         }
 
         try {

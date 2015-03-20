@@ -8,3 +8,7 @@ dependency-reduced-pom.xml
 
 #Emacs
 *~
+
+#InteliJ
+/.idea
+/*.iml
