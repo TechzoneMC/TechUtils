@@ -22,10 +22,12 @@
  */
 package net.techcable.techutils.packet;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import net.techcable.techutils.Reflection;
 import static net.techcable.techutils.Reflection.*;
+import static net.techcable.techutils.Reflection.getHandle;
 
 import org.bukkit.entity.Player;
 
@@ -39,13 +41,14 @@ import lombok.*;
 @Setter
 public abstract class Packet {
 	private Object handle;
-	
+
+    private static Field playerConnectionField = makeField(getNmsClass("EntityPlayer"), "playerConnection");
+    private static Method sendPacketMethod = makeMethod(getNmsClass("PlayerConnection"), "sendPacket", getNmsClass("Packet"));
 	public void sendTo(Player p) {
 		if (!isCompatible(p));
 		Object handle = Reflection.getHandle(p);
-		Object playerConnection = getField(makeField(handle.getClass(), "playerConnection"), handle);
-		Method sendPacket = makeMethod(getNmsClass("PlayerConnection"), "sendPacket", getNmsClass("Packet"));
-		callMethod(sendPacket, playerConnection, getHandle());
+		Object playerConnection = getField(playerConnectionField, handle);
+		callMethod(sendPacketMethod, playerConnection, getHandle());
 	}
 	
 	public abstract Class<?> getPacketClass();
@@ -53,4 +56,50 @@ public abstract class Packet {
 	public boolean isCompatible(Player p) {
 		return true;
 	}
+
+    // Utilities
+    public static int toFixedPoint(double d) {
+        return (int) Math.floor(d * 32.0D);
+    }
+    public static byte toByteAngle(double d) {
+        return (byte) ((int) (d * 256.0F / 360.0F));
+    }
+    private static Field networkManagerField = makeField(getNmsClass("PlayerConnection"), "networkManager");
+    private static Method getVersionMethod = makeMethod(getNmsClass("NetworkManager"), "getVersion");
+    public static int getProtocolVersion(Player player) {
+        Object handle = Reflection.getHandle(player);
+        Object connection = getField(playerConnectionField, handle);
+        Object networkManager = getField(networkManagerField, connection);
+        if (getVersionMethod == null) { //Go to server's default version
+            if (Reflection.getVersion().startsWith("v1_8")) {
+                return 47;
+            } else if (Reflection.getVersion().startsWith("v1_7")) {
+                return 5;
+            } else throw new RuntimeException("Unsupported server version " + Reflection.getVersion());
+        }
+        int version = callMethod(getVersionMethod, networkManager);
+        return version;
+    }
+    public static int[] doVelocityMagic(double velocityX, double velocityY, double velocityZ) {
+        double d0 = 3.9D;
+        if (velocityX < -d0) {
+            velocityX = -d0;
+        }
+        if (velocityY < -d0) {
+            velocityY = -d0;
+        }
+        if (velocityZ < -d0) {
+            velocityZ = -d0;
+        }
+        if (velocityX > d0) {
+            velocityX = d0;
+        }
+        if (velocityY > d0) {
+            velocityY = d0;
+        }
+        if (velocityZ > d0) {
+            velocityZ = d0;
+        }
+        return new int[] {(int)(velocityX * 8000.0D), (int)(velocityY * 8000.0D), (int)(velocityZ * 8000.0D)}; //I wish methods could return multiple values
+    }
 }
