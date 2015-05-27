@@ -20,26 +20,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.techcable.techutils.scheduler;
+package net.techcable.techutils.proxy;
 
-/**
- * Represents a tech task that returns a value
- *
- * @author Techcable
- */
-public interface FutureTechTask<V> extends TechTask {
+import jdk.internal.org.objectweb.asm.Type;
+import lombok.*;
 
-    /**
-     * Add a completion listener to this techtask
-     *
-     * @param listener the completion listener to add
-     */
-    public void addCompletionListener(CompletionListener<V> listener);
-    /**
-     * A listener for success of a techtask
-     *
-     */
-    public static interface CompletionListener<V> {
-        public void onSuccess(V value);
+import java.lang.reflect.Method;
+
+@RequiredArgsConstructor
+@Getter
+@EqualsAndHashCode(of = {"name", "signature"})
+public class MethodData {
+    public MethodData(org.objectweb.asm.commons.Method method) {
+        this.signature = method.getDescriptor();
+        this.name = method.getName();
+    }
+
+    private final String name;
+    private final String signature;
+
+    public MethodData(Method method) {
+        this.name = method.getName();
+        this.signature = Type.getMethodDescriptor(method);
+    }
+
+    public static MethodData fromString(String s) {
+        String[] parts = s.split(":");
+        if (parts.length < 1 || parts.length > 2) throw new IllegalArgumentException();
+        return new MethodData(parts[0], parts[1]);
+    }
+
+    @Override
+    public String toString() {
+        return name + ':' + signature;
     }
 }

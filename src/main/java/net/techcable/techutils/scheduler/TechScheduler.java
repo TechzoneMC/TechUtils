@@ -60,7 +60,7 @@ public abstract class TechScheduler {
 	 * @return a future tech task to listen for completion
 	 */
 	public static TechTask scheduleAsyncTask(final Runnable task, long delay) {
-        ListenableFutureTechTask techTask = ListenableFutureTechTask.create(Either.<Callable, Runnable>ofSecond(task), false, delay);
+        ListenableFutureTechTask techTask = ListenableFutureTechTask.create(Either.<Callable<Void>, Runnable>ofSecond(task), false, delay);
         getInstance().addTask(techTask);
         return techTask;
     }
@@ -98,7 +98,7 @@ public abstract class TechScheduler {
 	 * @return a tech task to control execution 
 	 */
 	public static TechTask scheduleAsyncTask(Runnable task, long delay, long interval) {
-        ListenableFutureTechTask techTask = ListenableFutureTechTask.createRepeating(Either.<Callable, Runnable>ofSecond(task), false, delay, interval);
+        ListenableFutureTechTask techTask = ListenableFutureTechTask.createRepeating(Either.<Callable<Void>, Runnable>ofSecond(task), false, delay, interval);
         getInstance().addTask(techTask);
         return techTask;
 	}
@@ -113,7 +113,7 @@ public abstract class TechScheduler {
 	 * @return a future tech task to retreive the result and listen for completion
 	 */
 	public static TechTask scheduleSyncTask(final Runnable task, long delay) {
-        ListenableFutureTechTask techTask = ListenableFutureTechTask.create(Either.<Callable, Runnable>ofSecond(task), true, delay);
+        ListenableFutureTechTask techTask = ListenableFutureTechTask.create(Either.<Callable<Void>, Runnable>ofSecond(task), true, delay);
         getInstance().addTask(techTask);
         return techTask;
 	}
@@ -144,7 +144,7 @@ public abstract class TechScheduler {
 	 * @return a tech task to control execution
 	 */
 	public static TechTask scheduleSyncTask(Runnable task, long delay, long period) {
-        ListenableFutureTechTask<?> techTask = ListenableFutureTechTask.create(Either.<Callable, Runnable>ofSecond(task), true, delay);
+        ListenableFutureTechTask<?> techTask = ListenableFutureTechTask.create(Either.<Callable<Void>, Runnable>ofSecond(task), true, delay);
         getInstance().addTask(techTask);
         return techTask;
     }

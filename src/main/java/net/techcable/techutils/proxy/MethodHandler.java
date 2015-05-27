@@ -20,26 +20,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.techcable.techutils.scheduler;
+package net.techcable.techutils.proxy;
 
-/**
- * Represents a tech task that returns a value
- *
- * @author Techcable
- */
-public interface FutureTechTask<V> extends TechTask {
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-    /**
-     * Add a completion listener to this techtask
-     *
-     * @param listener the completion listener to add
-     */
-    public void addCompletionListener(CompletionListener<V> listener);
-    /**
-     * A listener for success of a techtask
-     *
-     */
-    public static interface CompletionListener<V> {
-        public void onSuccess(V value);
-    }
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface MethodHandler {
+    public String value();
 }

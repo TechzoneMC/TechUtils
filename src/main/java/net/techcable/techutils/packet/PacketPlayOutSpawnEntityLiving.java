@@ -33,10 +33,10 @@ import java.lang.reflect.Field;
 import static net.techcable.techutils.Reflection.*;
 
 public class PacketPlayOutSpawnEntityLiving extends Packet {
-    @Getter
-    private static final Class<?> packetClass = getNmsClass("PacketPlayOutSpawnEntityLiving");
+
+    public static final Class<?> PACKET_CLASS = getNmsClass("PacketPlayOutSpawnEntityLiving");
     static {
-        Field[] fields = packetClass.getDeclaredFields();
+        Field[] fields = PACKET_CLASS.getDeclaredFields();
         entityIdField = fields[0];
         entityTypeField = fields[1];
         entityXField = fields[2];
@@ -62,7 +62,7 @@ public class PacketPlayOutSpawnEntityLiving extends Packet {
     private static Field entityPitchField;
     private static Field entityHeadPitchField;
     private static Field entityDataWatcherField;
-    private static final Constructor constructor = makeConstructor(packetClass);
+    private static final Constructor constructor = makeConstructor(PACKET_CLASS);
 
     @Getter
     private final Object handle;
@@ -81,5 +81,10 @@ public class PacketPlayOutSpawnEntityLiving extends Packet {
         setField(entityPitchField, handle, toByteAngle(location.getPitch()));
         setField(entityHeadPitchField, handle, toByteAngle(location.getPitch())); //Meh
         setField(entityDataWatcherField, handle, watcher.getHandle());
+    }
+
+    @Override
+    public Class<?> getPacketClass() {
+        return PACKET_CLASS;
     }
 }

@@ -27,7 +27,7 @@ import java.util.UUID;
 import java.util.WeakHashMap;
 
 import net.techcable.techutils.entity.TechPlayer;
-import net.techcable.techutils.entity.UUIDUtils;
+import net.techcable.techutils.uuid.UUIDUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

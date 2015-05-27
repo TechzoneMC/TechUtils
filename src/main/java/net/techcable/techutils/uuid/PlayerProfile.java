@@ -20,26 +20,61 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.techcable.techutils.scheduler;
+package net.techcable.techutils.uuid;
+
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Setter;
+import org.json.simple.JSONArray;
+
+import java.util.UUID;
 
 /**
- * Represents a tech task that returns a value
+ * Represnents a player
+ * Contains their uuid and username
+ *
+ * This may or may not have properties
  *
  * @author Techcable
  */
-public interface FutureTechTask<V> extends TechTask {
+@EqualsAndHashCode(of = {"id", "name"})
+public class PlayerProfile {
+
+    public PlayerProfile(UUID id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    @Setter(AccessLevel.PACKAGE)
+    private JSONArray properties;
+    private final UUID id;
+    private final String name;
 
     /**
-     * Add a completion listener to this techtask
+     * Get this player's uuid
      *
-     * @param listener the completion listener to add
+     * @return this players uuid
      */
-    public void addCompletionListener(CompletionListener<V> listener);
+    public UUID getId() {
+        return id;
+    }
+
     /**
-     * A listener for success of a techtask
+     * Get this player's name
      *
+     * @return this player's name
      */
-    public static interface CompletionListener<V> {
-        public void onSuccess(V value);
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Get a json array with this players properties
+     * Returns null if this players propeties haven't been retreived
+     *
+     * @return a json array with this player's properties or null if not retreived
+     */
+    public JSONArray getProperties() {
+        return properties;
     }
 }

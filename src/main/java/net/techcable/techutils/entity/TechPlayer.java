@@ -24,10 +24,9 @@ package net.techcable.techutils.entity;
 
 import java.util.UUID;
 
+import net.techcable.techutils.uuid.UUIDUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
-import com.google.common.base.Preconditions;
 
 import net.techcable.techutils.TechPlugin;
 import lombok.*;

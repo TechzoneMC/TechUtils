@@ -24,18 +24,13 @@ package net.techcable.techutils.scheduler;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Preconditions;
-import javassist.CannotCompileException;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.NotFoundException;
-import javassist.util.proxy.ProxyFactory;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Synchronized;
-import net.techcable.cbpatcher.ClassTransformListener;
-import net.techcable.techutils.bytecode.ClassTransformEvent;
-import net.techcable.techutils.bytecode.TechUtilsPatcher;
+import net.techcable.techutils.Reflection;
+import net.techcable.techutils.proxy.MethodHandler;
+import net.techcable.techutils.proxy.TechProxy;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitScheduler;
 
@@ -69,18 +64,19 @@ public class TickUtils {
 
     private static final Set<Runnable> tickListeners = new HashSet<>();
     private static void injectTicker() {
-        TechUtilsPatcher.addListener(new ClassTransformListener() {
-            @Override
-            public void onTransform(CtClass ctClass) {
-                if (!ctClass.getName().equals(schedulerClass.getName())) return;
-                try {
-                    CtMethod heartbeatMethod = ctClass.getDeclaredMethod("mainThreadHeartbeat");
-                    heartbeatMethod.insertBefore("net.techcable.techutils.scheduler.TickUtils.tick();");
-                } catch (NotFoundException | CannotCompileException e) {
-                    Bukkit.getLogger().severe("Unable to inject into scheduler heartbeat method.");
-                }
+        Class<?> craftTaskClass = Reflection.getCbClass("scheduler.CraftTask");
+        TechProxy proxy = TechProxy.create(new Object() {
+            @MethodHandler("run")
+            public void tick() {
+                TickUtils.tick();
             }
-        });
+
+            @MethodHandler("getPeriod")
+            public long getPeriod() {
+                return 1;
+            }
+        }, craftTaskClass);
+        Reflection.callMethod(Reflection.makeMethod(Bukkit.getScheduler().getClass(), "addTask", craftTaskClass), Bukkit.getScheduler(), proxy.newInstance());
     }
 
     private static boolean setup;

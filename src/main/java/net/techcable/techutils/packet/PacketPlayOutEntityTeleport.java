@@ -22,7 +22,6 @@
  */
 package net.techcable.techutils.packet;
 
-import lombok.Getter;
 import org.bukkit.Location;
 
 import java.lang.reflect.Constructor;
@@ -34,10 +33,9 @@ import static net.techcable.techutils.Reflection.*;
 * Created by Nicholas Schlabach on 4/16/2015.
 */
 public class PacketPlayOutEntityTeleport extends Packet {
-    @Getter
-    private static final Class<?> packetClass = getNmsClass("PacketPlayOutEntityTeleport");
+    public static final Class<?> PACKET_CLASS = getNmsClass("PacketPlayOutEntityTeleport");
     static {
-        Field[] fields = packetClass.getDeclaredFields();
+        Field[] fields = PACKET_CLASS.getDeclaredFields();
         teleportEntityIdField = fields[0];
         teleportXField = fields[1];
         teleportYField = fields[2];
@@ -61,7 +59,7 @@ public class PacketPlayOutEntityTeleport extends Packet {
         }
     }
 
-    private static final Constructor constructor = makeConstructor(packetClass);
+    private static final Constructor constructor = makeConstructor(PACKET_CLASS);
     private static Field teleportEntityIdField;
     private static Field teleportXField;
     private static Field teleportYField;
@@ -73,5 +71,10 @@ public class PacketPlayOutEntityTeleport extends Packet {
     private final Object handle;
     public Object getHandle() {
         return handle;
+    }
+
+    @Override
+    public Class<?> getPacketClass() {
+        return PACKET_CLASS;
     }
 }

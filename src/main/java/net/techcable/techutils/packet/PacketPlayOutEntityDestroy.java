@@ -30,10 +30,9 @@ import java.lang.reflect.Field;
 import static net.techcable.techutils.Reflection.*;
 
 public class PacketPlayOutEntityDestroy extends Packet {
-    @Getter
-    private static final Class<?> packetClass = getNmsClass("PacketPlayOutEntityDestroy");
-    private static final Field toDestroy = packetClass.getDeclaredFields()[0];
-    private static final Constructor constructor = makeConstructor(packetClass);
+    private static final Class<?> PACKET_CLASS = getNmsClass("PacketPlayOutEntityDestroy");
+    private static final Field toDestroy = PACKET_CLASS.getDeclaredFields()[0];
+    private static final Constructor constructor = makeConstructor(PACKET_CLASS);
 
     @Getter
     private final Object handle;
@@ -41,5 +40,10 @@ public class PacketPlayOutEntityDestroy extends Packet {
     public PacketPlayOutEntityDestroy(int... idsToDestroy) {
         this.handle = callConstructor(constructor);
         setField(toDestroy, handle, idsToDestroy);
+    }
+
+    @Override
+    public Class<?> getPacketClass() {
+        return PACKET_CLASS;
     }
 }

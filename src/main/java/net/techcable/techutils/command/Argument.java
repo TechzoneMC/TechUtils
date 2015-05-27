@@ -26,9 +26,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.techcable.techutils.TechPlugin;
 import net.techcable.techutils.entity.TechPlayer;
-import net.techcable.techutils.entity.UUIDUtils;
+import net.techcable.techutils.uuid.UUIDUtils;
 
 import org.bukkit.entity.Player;
 

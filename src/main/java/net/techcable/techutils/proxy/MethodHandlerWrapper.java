@@ -20,26 +20,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.techcable.techutils.scheduler;
+package net.techcable.techutils.proxy;
 
-/**
- * Represents a tech task that returns a value
- *
- * @author Techcable
- */
-public interface FutureTechTask<V> extends TechTask {
+import lombok.*;
+import org.objectweb.asm.Type;
 
-    /**
-     * Add a completion listener to this techtask
-     *
-     * @param listener the completion listener to add
-     */
-    public void addCompletionListener(CompletionListener<V> listener);
-    /**
-     * A listener for success of a techtask
-     *
-     */
-    public static interface CompletionListener<V> {
-        public void onSuccess(V value);
+import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Set;
+
+@RequiredArgsConstructor
+public class MethodHandlerWrapper {
+    @Getter
+    private final Method handler;
+    private final MethodHandler annotation;
+    private final Method[] possibleToHandle;
+
+    private Method toHandle;
+    public Method getToHandle() {
+        if (toHandle == null) {
+            String handlerDescriptor = Type.getMethodDescriptor(handler);
+            for (Method method : possibleToHandle) {
+                if (!method.getName().equals(annotation.value())) continue;
+                String methodDescriptor = Type.getMethodDescriptor(method);
+                if (!methodDescriptor.equals(handlerDescriptor)) continue;
+                toHandle = method;
+            }
+            if (toHandle == null) throw new IllegalArgumentException("No matching method in the superclasses and interfaces");
+        }
+        return toHandle;
     }
+
 }
