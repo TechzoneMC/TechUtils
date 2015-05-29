@@ -22,7 +22,7 @@
  */
 package net.techcable.techutils.proxy;
 
-import jdk.internal.org.objectweb.asm.Type;
+import org.objectweb.asm.Type;
 import lombok.*;
 
 import java.lang.reflect.Method;
