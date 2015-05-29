@@ -22,6 +22,7 @@
  */
 package net.techcable.techutils;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import net.techcable.techutils.entity.TechPlayer;
@@ -40,6 +41,7 @@ public abstract class TechPlugin<T extends TechPlayer> extends JavaPlugin {
     
     private PlayerManager<T> playerManager;
     
+    private MetricsLite metrics;
     /**
      * Startup techutils
      * 
@@ -48,6 +50,14 @@ public abstract class TechPlugin<T extends TechPlayer> extends JavaPlugin {
      */
     public final void onEnable() {
         this.playerManager = new PlayerManager<>(this);
+        try {
+            if (metrics == null) {
+                metrics = new MetricsLite(this);
+            }
+            metrics.start();
+        } catch (IOException e) {
+            warning("Unable to send metrics for TechUtils");
+        }
         startup();
     }
     

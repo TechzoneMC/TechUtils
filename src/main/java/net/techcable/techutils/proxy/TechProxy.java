@@ -128,9 +128,9 @@ public class TechProxy {
             methodWriter.visitFieldInsn(GETFIELD, className, "proxy", "L" + TechProxy.class.getName().replace('.', '/') + ";");
             methodWriter.visitVarInsn(ALOAD, 0);
             methodWriter.visitLdcInsn(new MethodData(handler.getToHandle()).toString());
-            methodWriter.visitLdcInsn(handler.getToHandle().getParameterCount());
+            methodWriter.visitLdcInsn(handler.getToHandle().getParameterTypes().length);
             methodWriter.visitTypeInsn(ANEWARRAY, "java/lang/Object");
-            for (i = 0; i < handler.getToHandle().getParameterCount(); i++) {
+            for (i = 0; i < handler.getToHandle().getParameterTypes().length; i++) {
                 String type = Type.getDescriptor(handler.getToHandle().getParameterTypes()[i]);
                 switch (type) {
                     case "Z" :
