@@ -25,6 +25,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <!-- Gson isn't in bukkit, only craftbukkit -->
@@ -41,11 +42,20 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
     </dependencies>
 
     <build>
+      <finalName>TechUtils</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>2.3</version>
+                <configuration>
+                  <relocations>
+                    <relocation>
+                      <pattern>org.objectweb.asm</pattern>
+                      <shadedPattern>net.techcable.techutils.libs.asm</shadedPattern>
+                    </relocation>
+                  </relocations>
+                </configuration>
             </plugin>
         </plugins>
     </build>
