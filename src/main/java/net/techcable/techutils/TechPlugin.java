@@ -23,18 +23,22 @@
 package net.techcable.techutils;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import net.techcable.techutils.entity.TechPlayer;
 import net.techcable.techutils.entity.PlayerManager;
 
+import net.techcable.techutils.scoreboard.GlobalScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * A plugin using techutils
+ * A plugin using TechUtils
  * 
  */
 public abstract class TechPlugin<T extends TechPlayer> extends JavaPlugin {
@@ -42,6 +46,23 @@ public abstract class TechPlugin<T extends TechPlayer> extends JavaPlugin {
     private PlayerManager<T> playerManager;
     
     private MetricsLite metrics;
+
+    private GlobalScoreboard scoreboard;
+
+    /**
+     * Gets the global scoreboard
+     * <p>
+     * A global scoreboard is shared across all players
+     * It overides any player specific scoreboard
+     * </p>
+     *
+     * @return the global scoreboard
+     */
+    public GlobalScoreboard getScoreboard() {
+        if (scoreboard == null) scoreboard = new GlobalScoreboard(this);
+        return scoreboard;
+    }
+
     /**
      * Startup techutils
      * 
@@ -134,5 +155,13 @@ public abstract class TechPlugin<T extends TechPlayer> extends JavaPlugin {
     
     private String getPrefix() {
         return "[" + getName() + "] ";
+    }
+
+    public Collection<T> getOnlinePlayers() {
+        Set<T> players = new HashSet<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            players.add(getPlayer(player));
+        }
+        return players;
     }
 }

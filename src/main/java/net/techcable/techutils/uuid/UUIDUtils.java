@@ -25,6 +25,7 @@ package net.techcable.techutils.uuid;
 import java.util.UUID;
 
 import com.google.common.base.Charsets;
+import net.techcable.techutils.Reflection;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -66,12 +67,12 @@ public class UUIDUtils {
      */
     public static String getName(UUID id) {
         if (lookup.getIfCached(id) != null) return lookup.getIfCached(id).getName();
-    	if (Bukkit.getPlayer(id) != null) {
+    	if (hasBukkit() && Bukkit.getPlayer(id) != null) {
             String name = Bukkit.getPlayer(id).getName();
             lookup.addToCache(new PlayerProfile(id, name)); //Saves us a potential lookup by staying in the cache after player leaves
             return name;
         }
-        if (Bukkit.getOnlineMode()) {
+        if (!hasBukkit() || Bukkit.getOnlineMode()) {
             PlayerProfile profile = lookup.lookup(id);
             if (profile == null) return null;
             return profile.getName();
@@ -104,5 +105,9 @@ public class UUIDUtils {
             return Bukkit.getPlayer(id);
         }
      	return null;
+     }
+
+     public static boolean hasBukkit() {
+        return Reflection.getClass("org.bukkit.Bukkit") != null && Bukkit.getServer() != null;
      }
 }

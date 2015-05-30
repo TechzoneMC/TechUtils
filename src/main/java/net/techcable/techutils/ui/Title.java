@@ -57,7 +57,7 @@ public class Title {
 	* Display the players this title
 	* Only shows to players who are on 1.8
 	*
-	* @param players players to display this title to
+	* @param players players to display0 this title to
 	*/ 
 	public void sendTo(Player... players) {
 		for (Player player : players) {

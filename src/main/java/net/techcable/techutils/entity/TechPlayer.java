@@ -24,6 +24,8 @@ package net.techcable.techutils.entity;
 
 import java.util.UUID;
 
+import net.techcable.techutils.scoreboard.BukkitTechBoard;
+import net.techcable.techutils.scoreboard.TechBoard;
 import net.techcable.techutils.uuid.UUIDUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -78,12 +80,22 @@ public class TechPlayer {
     final void destroy() {
         cleanup();
     }
-    
+
+    private TechBoard scoreboard;
+    public TechBoard getScoreboard() {
+        if (scoreboard == null) {
+            scoreboard = new BukkitTechBoard(this);
+        }
+        return scoreboard;
+    }
+
     /**
      * Perform any necessary cleanup actions
      * 
      */
-    protected void cleanup() {}
+    protected void cleanup() {
+        if (scoreboard != null) scoreboard.cleanup();
+    }
     
     public final boolean equals(Object other) {
         if (other == null) return false;

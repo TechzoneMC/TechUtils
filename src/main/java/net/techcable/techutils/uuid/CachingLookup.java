@@ -62,12 +62,14 @@ public class CachingLookup implements Lookup {
     public PlayerProfile lookup(UUID id) {
         if (idCache.contains(id)) return idCache.get(id);
         PlayerProfile profile = backing.lookup(id);
+        if (profile == null) return null;
         addToCache(profile);
         return profile;
     }
 
     @Override
     public void lookupProperties(PlayerProfile profile) {
+        if (profile == null) return;
         if (profile.getProperties() != null) return;
         if (propertyCache.contains(profile)) {
             JSONArray properties = propertyCache.get(profile);
