@@ -23,6 +23,7 @@
 package net.techcable.techutils.config;
 
 import net.techcable.techutils.Reflection;
+import net.techcable.techutils.collect.Collections3;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -30,8 +31,20 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.util.Set;
 
 public class AnnotationConfig {
+
+    public static void addSerializer(ConfigSerializer serializer) {
+        serializers.add(serializer);
+    }
+    private static final Set<ConfigSerializer> serializers = Collections3.newConcurrentHashSet();
+    public static ConfigSerializer getSerializer(Class<?> type) {
+        for (ConfigSerializer serializer : serializers) {
+            if (serializer.canHandle(type)) return serializer;
+        }
+        return null;
+    }
 
     public void load(File configFile, URL defaultConfigUrl) throws IOException, InvalidConfigurationException {
         YamlConfiguration existing;
@@ -55,7 +68,10 @@ public class AnnotationConfig {
             if (!field.getType().isInstance(defaultConfig.get(key))) {
                 throw new InvalidConfigurationException(key + " is not instanceof " + field.getType().getSimpleName());
             }
-            Reflection.setField(field, this, defaultConfig.get(key));
+            Object yaml = defaultConfig.get(key);
+            if (getSerializer(field.getType()) == null) throw new InvalidConfigurationException("No seralizer for the type " + field.getType().getSimpleName());
+            Object java = getSerializer(field.getType()).deserialize(yaml, );
+            Reflection.setField(field, this, 1);
         }
     }
 
@@ -67,11 +83,10 @@ public class AnnotationConfig {
             if (!defaultConfig.contains(key)) {
                 throw new InvalidConfigurationException("Unknown key: " + key);
             }
-            if (!field.getType().isInstance(defaultConfig.get(key))) {
-                throw new InvalidConfigurationException(key + " is not instanceof " + field.getType().getSimpleName());
-            }
-            Object value = Reflection.getField(field, this);
-            defaultConfig.set(key, value);
+            Object rawValue = Reflection.getField(field, this);
+            if (getSerializer(rawValue.getClass()) == null) throw new InvalidConfigurationException("No seralizer for the type " + rawValue.getClass().getSimpleName());
+            Object yamlValue = getSerializer(rawValue.getClass()).serialize(rawValue);
+            defaultConfig.set(key, yamlValue);
         }
     }
 }
