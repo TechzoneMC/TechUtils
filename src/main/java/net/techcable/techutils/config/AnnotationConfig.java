@@ -24,6 +24,17 @@ package net.techcable.techutils.config;
 
 import net.techcable.techutils.Reflection;
 import net.techcable.techutils.collect.Collections3;
+import net.techcable.techutils.config.seralizers.BooleanSerializer;
+import net.techcable.techutils.config.seralizers.ByteSeralizer;
+import net.techcable.techutils.config.seralizers.CharSerializer;
+import net.techcable.techutils.config.seralizers.DoubleSerializer;
+import net.techcable.techutils.config.seralizers.EnumSerializer;
+import net.techcable.techutils.config.seralizers.FloatSerializer;
+import net.techcable.techutils.config.seralizers.IntSeralizer;
+import net.techcable.techutils.config.seralizers.ListSerializer;
+import net.techcable.techutils.config.seralizers.LongSerializer;
+import net.techcable.techutils.config.seralizers.ShortSeralizer;
+import net.techcable.techutils.config.seralizers.StringSerializer;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -34,6 +45,19 @@ import java.net.URL;
 import java.util.Set;
 
 public class AnnotationConfig {
+    static {
+        addSerializer(new BooleanSerializer());
+        addSerializer(new ByteSeralizer());
+        addSerializer(new CharSerializer());
+        addSerializer(new DoubleSerializer());
+        addSerializer(new EnumSerializer());
+        addSerializer(new FloatSerializer());
+        addSerializer(new IntSeralizer());
+        addSerializer(new ListSerializer());
+        addSerializer(new LongSerializer());
+        addSerializer(new ShortSeralizer());
+        addSerializer(new StringSerializer());
+    }
 
     public static void addSerializer(ConfigSerializer serializer) {
         serializers.add(serializer);
@@ -70,7 +94,7 @@ public class AnnotationConfig {
             }
             Object yaml = defaultConfig.get(key);
             if (getSerializer(field.getType()) == null) throw new InvalidConfigurationException("No seralizer for the type " + field.getType().getSimpleName());
-            Object java = getSerializer(field.getType()).deserialize(yaml, );
+            Object java = getSerializer(field.getType()).deserialize(yaml, field.getType());
             Reflection.setField(field, this, 1);
         }
     }
