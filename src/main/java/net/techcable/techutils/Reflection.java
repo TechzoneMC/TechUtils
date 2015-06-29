@@ -30,11 +30,12 @@ import java.lang.reflect.Method;
 import org.bukkit.Bukkit;
 
 public class Reflection {
+
     public static Class<?> getNmsClass(String name) {
         String className = "net.minecraft.server." + getVersion() + "." + name;
         return getClass(className);
     }
-    
+
     public static Class<?> getCbClass(String name) {
         String className = "org.bukkit.craftbukkit." + getVersion() + "." + name;
         return getClass(className);
@@ -51,7 +52,7 @@ public class Reflection {
             }
         }
     }
-    
+
     public static String getVersion() {
         String packageName = Bukkit.getServer().getClass().getPackage().getName();
         return packageName.substring(packageName.lastIndexOf('.') + 1);
@@ -74,7 +75,7 @@ public class Reflection {
     }
 
     @SuppressWarnings("unchecked")
-	public static <T> T callMethod(Method method, Object instance, Object... paramaters) {
+    public static <T> T callMethod(Method method, Object instance, Object... paramaters) {
         if (method == null) throw new RuntimeException("No such method");
         method.setAccessible(true);
         try {
@@ -87,7 +88,7 @@ public class Reflection {
     }
 
     @SuppressWarnings("unchecked")
-	public static <T> Constructor<T> makeConstructor(Class<?> clazz, Class<?>... paramaterTypes) {
+    public static <T> Constructor<T> makeConstructor(Class<?> clazz, Class<?>... paramaterTypes) {
         try {
             return (Constructor<T>) clazz.getConstructor(paramaterTypes);
         } catch (NoSuchMethodException ex) {
@@ -108,7 +109,7 @@ public class Reflection {
             throw new RuntimeException(ex);
         }
     }
-    
+
     public static Field makeField(Class<?> clazz, String name) {
         try {
             return clazz.getDeclaredField(name);
@@ -118,9 +119,9 @@ public class Reflection {
             throw new RuntimeException(ex);
         }
     }
-    
+
     @SuppressWarnings("unchecked")
-	public static <T> T getField(Field field, Object instance) {
+    public static <T> T getField(Field field, Object instance) {
         if (field == null) throw new RuntimeException("No such field");
         field.setAccessible(true);
         try {
@@ -129,7 +130,7 @@ public class Reflection {
             throw new RuntimeException(ex);
         }
     }
-        
+
     public static void setField(Field field, Object instance, Object value) {
         if (field == null) throw new RuntimeException("No such field");
         field.setAccessible(true);
@@ -139,7 +140,7 @@ public class Reflection {
             throw new RuntimeException(ex);
         }
     }
-    
+
     public static Class<?> getClass(String name) {
         try {
             return Class.forName(name);
@@ -147,12 +148,12 @@ public class Reflection {
             return null;
         }
     }
-    
+
     public static <T> Class<? extends T> getClass(String name, Class<T> superClass) {
-    	try {
-    		return Class.forName(name).asSubclass(superClass);
-    	} catch (ClassCastException | ClassNotFoundException ex) {
-    		return null;
-    	}
+        try {
+            return Class.forName(name).asSubclass(superClass);
+        } catch (ClassCastException | ClassNotFoundException ex) {
+            return null;
+        }
     }
 }

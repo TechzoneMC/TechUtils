@@ -22,15 +22,24 @@
  */
 package net.techcable.techutils.uuid;
 
-import com.google.common.collect.Lists;
 import lombok.*;
-import org.json.simple.JSONArray;
 
 import java.lang.ref.SoftReference;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
+import org.json.simple.JSONArray;
+
+import com.google.common.collect.Lists;
 
 @RequiredArgsConstructor
 public class CachingLookup implements Lookup {
+
     private final Lookup backing;
     private final Cache<UUID, PlayerProfile> idCache = new Cache<>();
     private final Cache<String, PlayerProfile> nameCache = new Cache<>();
@@ -134,6 +143,7 @@ public class CachingLookup implements Lookup {
             propertyCache.put(profile, profile.getProperties());
         }
     }
+
     public PlayerProfile getIfCached(String name) {
         if (!nameCache.contains(name)) return null;
         return nameCache.get(name);

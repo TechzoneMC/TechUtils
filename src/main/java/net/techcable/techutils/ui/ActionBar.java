@@ -22,23 +22,26 @@
  */
 package net.techcable.techutils.ui;
 
+import lombok.*;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import lombok.Getter;
 import net.techcable.techutils.Reflection;
+
 import org.bukkit.entity.Player;
 
-import static net.techcable.techutils.Reflection.*; //Make sure to change this to the right package
+import static net.techcable.techutils.Reflection.*;
 
 /**
  * A 1.8 ActionBar
- *
+ * <p/>
  * Works on protocol hack and real 1.8
  */
 public class ActionBar {
+
     /**
      * Creates a new action bar with the specificed text
      *
@@ -47,6 +50,7 @@ public class ActionBar {
     public ActionBar(String text) {
         this.text = text;
     }
+
     @Getter
     private final String text;
 
@@ -57,6 +61,7 @@ public class ActionBar {
     }
 
     private static ActionBarHandler handler;
+
     private static ActionBarHandler getActionBarHandler() {
         if (handler != null) return handler;
         if (SpigotActionBarHandler.isSupported()) {
@@ -70,15 +75,18 @@ public class ActionBar {
     }
 
     private static interface ActionBarHandler {
+
         public void sendTo(Player p, ActionBar bar);
     }
 
     private static class SpigotActionBarHandler implements ActionBarHandler {
+
         private SpigotActionBarHandler() {
             assert isSupported() : "Spigot action bar is unsupported!";
         }
 
         private final static Constructor packetConstructor = makeConstructor(getNmsClass("PacketPlayOutChat"), getNmsClass("IChatBaseComponent"), int.class);
+
         public void sendTo(Player p, ActionBar bar) {
             if (getProtocolVersion(p) < 16) return;
             Object baseComponent = serialize(bar.getText());
@@ -89,6 +97,7 @@ public class ActionBar {
         private static final Field playerConnectionField = makeField(getNmsClass("EntityPlayer"), "playerConnection");
         private static final Field networkManagerField = makeField(getNmsClass("PlayerConnection"), "networkManager");
         private static final Method getVersion = makeMethod(getNmsClass("NetworkManager"), "getVersion");
+
         private static int getProtocolVersion(Player player) {
             Object handle = getHandle(player);
             Object connection = getField(playerConnectionField, handle);
@@ -107,10 +116,11 @@ public class ActionBar {
 
         private NMSActionBarHandler() {
             assert !SpigotActionBarHandler.isSupported() : "Spigot action bar is supported";
-            assert NMSActionBarHandler.isSupported(): "NMS Action bar isn't supported";
+            assert NMSActionBarHandler.isSupported() : "NMS Action bar isn't supported";
         }
 
         private static final Constructor packetConstructor = makeConstructor(getNmsClass("PacketPlayOutChat"), getNmsClass("IChatBaseComponent"), int.class);
+
         public void sendTo(Player p, ActionBar bar) {
             Object baseComponent = serialize(bar.getText());
             Object packet = callConstructor(packetConstructor, baseComponent, 2);
@@ -126,6 +136,7 @@ public class ActionBar {
 
     private static final Field playerConnectionField = makeField(getNmsClass("EntityPlayer"), "playerConnection");
     private static final Method sendPacketMethod = makeMethod(getNmsClass("PlayerConnection"), "sendPacket", getNmsClass("Packet"));
+
     private static void sendPacket(Player player, Object packet) {
         Object handle = getHandle(player);
         Object connection = getField(playerConnectionField, handle);
@@ -134,8 +145,10 @@ public class ActionBar {
 
     private static final Method addSiblingMethod = makeMethod(getNmsClass("IChatBaseComponent"), "addSibling", getNmsClass("IChatBaseComponent"));
     private static final Method fromStringMethod = makeMethod(getCbClass("util.CraftChatMessage"), "fromString", String.class);
+
     private static Object serialize(String text) { //Serialize to IChatBaseComponent
-        Object baseComponentArray = callMethod(fromStringMethod, null, text);;
+        Object baseComponentArray = callMethod(fromStringMethod, null, text);
+        ;
         Object first = null;
         for (int i = 0; i < Array.getLength(baseComponentArray); i++) {
             Object baseComponent = Array.get(baseComponentArray, i);

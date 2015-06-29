@@ -22,29 +22,36 @@
  */
 package net.techcable.techutils.scheduler;
 
-import com.google.common.base.Preconditions;
-import org.bukkit.Bukkit;
-
-import java.util.*;
+import java.util.HashSet;
+import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import org.bukkit.Bukkit;
+
+import com.google.common.base.Preconditions;
+
 public class TechSchedulerImpl extends TechScheduler {
+
     public TechSchedulerImpl() {
         TickUtils.addTickListener(new Runnable() {
+
             @Override
             public void run() {
                 tick();
             }
         });
     }
+
     private final Executor executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() + 4);
 
     @Override
     protected void addTask(ListenableFutureTechTask<?> task) {
         registerQueue.add(task);
     }
+
     private final Queue<ListenableFutureTechTask<?>> registerQueue = new ConcurrentLinkedQueue<>();
     private final Set<ListenableFutureTechTask<?>> tasks = new HashSet<>();
 

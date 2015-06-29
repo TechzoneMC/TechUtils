@@ -24,30 +24,35 @@ package net.techcable.techutils.uuid;
 
 import java.util.UUID;
 
-import com.google.common.base.Charsets;
 import net.techcable.techutils.Reflection;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import com.google.common.base.Charsets;
+
 public class UUIDUtils {
-    private UUIDUtils() {}
+
+    private UUIDUtils() {
+    }
 
     private static final CachingLookup lookup = new CachingLookup(new BackupLookup(new MCPlayerIndexLookup(), new MojangLookup()));
 
     /**
      * Retreive a player's UUID based on it's name
-     * 
+     * <p/>
      * Returns null if lookup failed
-     * 
+     *
      * @param name the player's name
+     *
      * @return the player's uuid, or null if failed
      */
     public static UUID getId(String name) {
-    	if (lookup.getIfCached(name) != null) return lookup.getIfCached(name).getId(); //Previously cached by UUIDUtils.getPlayerExact()
-    	if (getPlayerExact(name) != null) {
-    		return getPlayerExact(name).getUniqueId();
-    	}
+        if (lookup.getIfCached(name) != null) return lookup.getIfCached(name).getId(); //Previously cached by UUIDUtils.getPlayerExact()
+        if (getPlayerExact(name) != null) {
+            return getPlayerExact(name).getUniqueId();
+        }
         if (Bukkit.getOnlineMode()) {
             PlayerProfile profile = lookup.lookup(name);
             if (profile == null) return null;
@@ -56,18 +61,19 @@ public class UUIDUtils {
             return UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(Charsets.UTF_8));
         }
     }
-    
+
     /**
      * Retreive a player's name based on it's uuid
-     * 
+     * <p/>
      * Returns null if lookup failed
-     * 
+     *
      * @param id the player's uuid
+     *
      * @return the player's name, or null if failed
      */
     public static String getName(UUID id) {
         if (lookup.getIfCached(id) != null) return lookup.getIfCached(id).getName();
-    	if (hasBukkit() && Bukkit.getPlayer(id) != null) {
+        if (hasBukkit() && Bukkit.getPlayer(id) != null) {
             String name = Bukkit.getPlayer(id).getName();
             lookup.addToCache(new PlayerProfile(id, name)); //Saves us a potential lookup by staying in the cache after player leaves
             return name;
@@ -81,21 +87,22 @@ public class UUIDUtils {
             return player.getName();
         }
     }
-    
+
     /**
      * A faster version of Bukkit.getPlayerExact()
-     * <p>
+     * <p/>
      * Bukkit.getPlayerExact() iterates through all online players <br>
      * This caches results from Bukkit.getPlayerExact() to speed up lookups
-     * 
-     * @see Bukkit#getPlayerExact(String)
-     * 
+     *
      * @param name get player with this name
+     *
      * @return player with specified name
+     *
+     * @see Bukkit#getPlayerExact(String)
      */
-     public static Player getPlayerExact(String name) {
-     	if (lookup.getIfCached(name) != null) return Bukkit.getPlayer(lookup.getIfCached(name).getId());
-     	if (Bukkit.getPlayerExact(name) != null) {
+    public static Player getPlayerExact(String name) {
+        if (lookup.getIfCached(name) != null) return Bukkit.getPlayer(lookup.getIfCached(name).getId());
+        if (Bukkit.getPlayerExact(name) != null) {
             UUID id = Bukkit.getPlayerExact(name).getUniqueId();
             /*
              * Calling Bukkit.getPlayerExact() iterates through all online players, making it far slower than hashmap retreival
@@ -104,10 +111,10 @@ public class UUIDUtils {
             lookup.addToCache(new PlayerProfile(id, name));
             return Bukkit.getPlayer(id);
         }
-     	return null;
-     }
+        return null;
+    }
 
-     public static boolean hasBukkit() {
+    public static boolean hasBukkit() {
         return Reflection.getClass("org.bukkit.Bukkit") != null && Bukkit.getServer() != null;
-     }
+    }
 }

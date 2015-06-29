@@ -29,39 +29,42 @@ public interface Lookup {
 
     /**
      * Lookup a profile with the given name
-     *
+     * <p/>
      * The returned player profile may or may not include properties
      * If properties are needed, proceed to use a property lookup
      *
      * @param name look for a profile with this name
+     *
      * @return a profile with the given name
      */
     public PlayerProfile lookup(String name);
 
     /**
      * Lookup the profiles of the given name
-     *
+     * <p/>
      * The returned player profiles may or may not include properties
      * If properties are needed, proceed to lookup properties
      *
      * @param names
+     *
      * @return
      */
     public Collection<PlayerProfile> lookup(Collection<String> names);
 
     /**
      * Lookup a profile with the given uuid
-     *
+     * <p/>
      * The returned player profile may or may not include properties
      *
      * @param id look for a profile with this uuid
+     *
      * @return a profile with the given id
      */
     public PlayerProfile lookup(UUID id);
 
     /**
      * Lookup the properties of the given profile
-     *
+     * <p/>
      * This method does nothing if the profile already has properties
      *
      * @param profile the profile to lookup properties for

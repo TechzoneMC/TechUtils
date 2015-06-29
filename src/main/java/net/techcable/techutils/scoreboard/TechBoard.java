@@ -22,23 +22,24 @@
  */
 package net.techcable.techutils.scoreboard;
 
-import com.google.common.collect.ImmutableList;
 import lombok.*;
-import net.techcable.techutils.entity.TechPlayer;
-import net.techcable.techutils.scheduler.TechScheduler;
-import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import net.techcable.techutils.scheduler.TechScheduler;
+
+import com.google.common.collect.ImmutableList;
+
 public abstract class TechBoard {
+
     protected TechBoard() {
         TechScheduler.scheduleAsyncTask(new Runnable() {
+
             @Override
             public void run() {
                 aquireLock();
@@ -72,10 +73,15 @@ public abstract class TechBoard {
     }
 
     protected abstract void display0();
+
     protected abstract void hide0();
+
     protected abstract void setScore(String name, int score);
+
     protected abstract void flush();
+
     protected abstract void removeScore(final String name);
+
     private final Map<String, ScoreboardElement> elements = new HashMap<>();
     private final List<ScoreboardElement> elementList = new LinkedList<>();
 
@@ -139,12 +145,14 @@ public abstract class TechBoard {
         }
     }
 
-    public void cleanup() {}
+    public void cleanup() {
+    }
 
     @RequiredArgsConstructor
     @EqualsAndHashCode(of = {"name", "score"})
     @Getter
     public static class ScoreboardElement {
+
         private final String name;
         private final int score;
         @Getter(AccessLevel.NONE)

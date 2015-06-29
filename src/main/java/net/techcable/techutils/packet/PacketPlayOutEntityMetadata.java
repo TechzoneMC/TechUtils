@@ -22,37 +22,42 @@
  */
 package net.techcable.techutils.packet;
 
-import lombok.Getter;
-import net.techcable.techutils.packet.wrappers.WrappedDataWatcher;
+import lombok.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
+import net.techcable.techutils.packet.wrappers.WrappedDataWatcher;
+
 import static net.techcable.techutils.Reflection.*;
 
 public class PacketPlayOutEntityMetadata extends Packet {
+
     private static final Class<?> PACKET_CLASS = getNmsClass("PacketPlayOutEntityMetadata");
+
     static {
         for (int i = 0; i < PACKET_CLASS.getDeclaredFields().length; i++) {
             Field field = PACKET_CLASS.getDeclaredFields()[i];
             switch (i) {
-                case 0 :
+                case 0:
                     entityIdField = field;
                     break;
-                case 1 :
+                case 1:
                     dataWatcherValuesField = field;
                     break;
-                default :
+                default:
                     throw new RuntimeException("Unknown field index " + i);
             }
         }
     }
+
     private static Field entityIdField;
     private static Field dataWatcherValuesField;
     private static final Constructor constructor = makeConstructor(PACKET_CLASS);
 
     @Getter
     private final Object handle;
+
     public PacketPlayOutEntityMetadata(int entityId, WrappedDataWatcher watcher) {
         this.handle = callConstructor(constructor);
         setField(entityIdField, handle, entityId);

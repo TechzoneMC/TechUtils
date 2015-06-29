@@ -23,20 +23,21 @@
 package net.techcable.techutils.proxy;
 
 import lombok.*;
-import org.objectweb.asm.Type;
 
 import java.lang.reflect.Method;
-import java.util.HashSet;
-import java.util.Set;
+
+import org.objectweb.asm.Type;
 
 @RequiredArgsConstructor
 public class MethodHandlerWrapper {
+
     @Getter
     private final Method handler;
     private final MethodHandler annotation;
     private final Method[] possibleToHandle;
 
     private Method toHandle;
+
     public Method getToHandle() {
         if (toHandle == null) {
             String handlerDescriptor = Type.getMethodDescriptor(handler);

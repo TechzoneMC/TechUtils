@@ -25,15 +25,17 @@ package net.techcable.techutils.ui;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import net.techcable.techutils.scheduler.TechScheduler;
 import net.techcable.techutils.entity.fake.FakeDragon;
 import net.techcable.techutils.entity.fake.FakeEntity;
 import net.techcable.techutils.entity.fake.FakeWither;
 import net.techcable.techutils.packet.Packet;
+import net.techcable.techutils.scheduler.TechScheduler;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public class BossBar implements Runnable {
+
     private BossBar(Player p) {
         this.player = p;
         int version = Packet.getProtocolVersion(p);
@@ -48,6 +50,7 @@ public class BossBar implements Runnable {
     private static final Map<Player, BossBar> bars = new WeakHashMap<Player, BossBar>();
     private final Player player;
     private final FakeEntity entity;
+
     public static BossBar getBossBar(Player player) {
         //!!Change this to get your plugin's instance!!
         if (!bars.containsKey(player)) {
@@ -83,7 +86,6 @@ public class BossBar implements Runnable {
 
     /**
      * Stop showing the boss bar to this player
-     *
      */
     public void stopShowing() {
         if (entity.isSpawned()) {
@@ -93,6 +95,7 @@ public class BossBar implements Runnable {
 
     /**
      * Return if the boss bar is currently being shown
+     *
      * @return
      */
     public boolean isShown() {

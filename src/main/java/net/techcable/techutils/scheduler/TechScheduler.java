@@ -22,128 +22,136 @@
  */
 package net.techcable.techutils.scheduler;
 
-import java.util.concurrent.*;
+import lombok.*;
 
-import com.google.common.util.concurrent.*;
-import lombok.Getter;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
 
-import lombok.Setter;
+import net.techcable.techutils.collect.Either;
 
 import com.google.common.annotations.Beta;
-import net.techcable.techutils.collect.Either;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 
 /**
  * An alternative to BukkitScheduler that doesn't need a plugin
  * Uses guava ListenableFutures when possible
- * 
+ *
  * @author Techcable
  */
 @Beta
 public abstract class TechScheduler {
-	protected TechScheduler() {}
+
+    protected TechScheduler() {
+    }
 
     @Getter
     @Setter
     private static TechScheduler instance = new TechSchedulerImpl();
-	private static final ListeningExecutorService executor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
+    private static final ListeningExecutorService executor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()));
 
-	/**
-	 * Execute a task in another thread
-	 * <p>
-	 * This should be used (if possible) so you don't lag the main thread
-	 * <br>
-	 * <b>Remember! Most bukkit calls aren't thread safe</b><br>
-	 * If you need to use a bukkit method call scheduleSyncTask
-	 *
-	 * @param delay delay before first execution  (in ticks)
-	 * @param task the task to execute
-	 * @return a future tech task to listen for completion
-	 */
-	public static TechTask scheduleAsyncTask(final Runnable task, long delay) {
+    /**
+     * Execute a task in another thread
+     * <p/>
+     * This should be used (if possible) so you don't lag the main thread
+     * <br>
+     * <b>Remember! Most bukkit calls aren't thread safe</b><br>
+     * If you need to use a bukkit method call scheduleSyncTask
+     *
+     * @param delay delay before first execution  (in ticks)
+     * @param task the task to execute
+     *
+     * @return a future tech task to listen for completion
+     */
+    public static TechTask scheduleAsyncTask(final Runnable task, long delay) {
         ListenableFutureTechTask techTask = ListenableFutureTechTask.create(Either.<Callable<Void>, Runnable>ofSecond(task), false, delay);
         getInstance().addTask(techTask);
         return techTask;
     }
-	
-	/**
-	 * Execute a task in another thread
-	 * <p>
-	 * This should be used (if possible) so you don't lag the main thread
-	 * <br>
-	 * <b>Remember! Most bukkit calls aren't thread safe</b><br>
-	 * If you need to use a bukkit method call scheduleSyncTask
-	 * 
-	 * 
-	 * @param task the task to execute
-	 * @param delay delay before first execution (in ticks)
-	 * @return a future tech task to retrieve the result and listen for completion
-	 */
-	public static <T> FutureTechTask<T> scheduleAsyncTask(Callable<T> task, long delay) {
+
+    /**
+     * Execute a task in another thread
+     * <p/>
+     * This should be used (if possible) so you don't lag the main thread
+     * <br>
+     * <b>Remember! Most bukkit calls aren't thread safe</b><br>
+     * If you need to use a bukkit method call scheduleSyncTask
+     *
+     * @param task the task to execute
+     * @param delay delay before first execution (in ticks)
+     *
+     * @return a future tech task to retrieve the result and listen for completion
+     */
+    public static <T> FutureTechTask<T> scheduleAsyncTask(Callable<T> task, long delay) {
         ListenableFutureTechTask<T> techTask = ListenableFutureTechTask.create(Either.<Callable<T>, Runnable>ofFirst(task), false, delay);
-	    getInstance().addTask(techTask);
+        getInstance().addTask(techTask);
         return techTask;
     }
-	
-	/**
-	 * Executes a task repeatedly in another thread
-	 * <p>
-	 * This should be used (if possible) so you don't lag the main thread
-	 * <br>
-	 * <b>Remember! Most bukkit calls aren't thread safe</b><br>
-	 * If you need to use a bukkit method call scheduleSyncTask
-	 * 
-	 * @param task the task to execute
-	 * @param delay the dealy before the first execution (in ticks)
-	 * @param interval time to wait between executions (in ticks)
-	 * @return a tech task to control execution 
-	 */
-	public static TechTask scheduleAsyncTask(Runnable task, long delay, long interval) {
+
+    /**
+     * Executes a task repeatedly in another thread
+     * <p/>
+     * This should be used (if possible) so you don't lag the main thread
+     * <br>
+     * <b>Remember! Most bukkit calls aren't thread safe</b><br>
+     * If you need to use a bukkit method call scheduleSyncTask
+     *
+     * @param task the task to execute
+     * @param delay the dealy before the first execution (in ticks)
+     * @param interval time to wait between executions (in ticks)
+     *
+     * @return a tech task to control execution
+     */
+    public static TechTask scheduleAsyncTask(Runnable task, long delay, long interval) {
         ListenableFutureTechTask techTask = ListenableFutureTechTask.createRepeating(Either.<Callable<Void>, Runnable>ofSecond(task), false, delay, interval);
         getInstance().addTask(techTask);
         return techTask;
-	}
-	
-	/**
-	 * Execute a task in the main thread
-	 * <p>
-	 * Long running code should be scheduled asynchronously, but only sync tasks are safe to call most bukkit methods
-	 * 
-	 * @param delay delay before first execution  (in ticks)
-	 * @param task the task to execute
-	 * @return a future tech task to retreive the result and listen for completion
-	 */
-	public static TechTask scheduleSyncTask(final Runnable task, long delay) {
+    }
+
+    /**
+     * Execute a task in the main thread
+     * <p/>
+     * Long running code should be scheduled asynchronously, but only sync tasks are safe to call most bukkit methods
+     *
+     * @param delay delay before first execution  (in ticks)
+     * @param task the task to execute
+     *
+     * @return a future tech task to retreive the result and listen for completion
+     */
+    public static TechTask scheduleSyncTask(final Runnable task, long delay) {
         ListenableFutureTechTask techTask = ListenableFutureTechTask.create(Either.<Callable<Void>, Runnable>ofSecond(task), true, delay);
         getInstance().addTask(techTask);
         return techTask;
-	}
-	
-	/**
-	 * Execute a task in the main thread
-	 * <p>
-	 * Long running code should be scheduled asynchronously, but only sync tasks are safe to call most bukkit methods
-	 * 
-	 * @param delay delay before first execution  (in ticks)
-	 * @param task the task to execute
-	 * @return a future tech task to retrieve the result and listen for completion
-	 */
-	public static <V> FutureTechTask<V> scheduleSyncTask(Callable<V> task, long delay) {
+    }
+
+    /**
+     * Execute a task in the main thread
+     * <p/>
+     * Long running code should be scheduled asynchronously, but only sync tasks are safe to call most bukkit methods
+     *
+     * @param delay delay before first execution  (in ticks)
+     * @param task the task to execute
+     *
+     * @return a future tech task to retrieve the result and listen for completion
+     */
+    public static <V> FutureTechTask<V> scheduleSyncTask(Callable<V> task, long delay) {
         ListenableFutureTechTask<V> techTask = ListenableFutureTechTask.create(Either.<Callable<V>, Runnable>ofFirst(task), true, delay);
         getInstance().addTask(techTask);
         return techTask;
-	}
+    }
 
-	/**
-	 * Execute a task in the main thread
-	 * <p>
-	 * Long running code should be scheduled asynchronously, but only sync tasks are safe to call most bukkit methods
-	 * 
-	 * @param task the task to execute
-	 * @param delay delay before first execution  (in ticks)
-	 * @param period time to wait between executions (in ticks)
-	 * @return a tech task to control execution
-	 */
-	public static TechTask scheduleSyncTask(Runnable task, long delay, long period) {
+    /**
+     * Execute a task in the main thread
+     * <p/>
+     * Long running code should be scheduled asynchronously, but only sync tasks are safe to call most bukkit methods
+     *
+     * @param task the task to execute
+     * @param delay delay before first execution  (in ticks)
+     * @param period time to wait between executions (in ticks)
+     *
+     * @return a tech task to control execution
+     */
+    public static TechTask scheduleSyncTask(Runnable task, long delay, long period) {
         ListenableFutureTechTask<?> techTask = ListenableFutureTechTask.create(Either.<Callable<Void>, Runnable>ofSecond(task), true, delay);
         getInstance().addTask(techTask);
         return techTask;

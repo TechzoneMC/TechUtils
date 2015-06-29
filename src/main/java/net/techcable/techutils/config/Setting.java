@@ -23,8 +23,10 @@
 package net.techcable.techutils.config;
 
 public @interface Setting {
+
     /**
      * Get The configuration key of this field
+     *
      * @return The configuration key of this field
      */
     public String value();

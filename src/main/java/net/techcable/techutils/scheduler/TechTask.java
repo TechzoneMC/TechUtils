@@ -49,9 +49,9 @@ public interface TechTask {
 
     /**
      * Attempt to cancel this task
-     *
+     * <p/>
      * Won't Interrupt if running
-     *
+     * <p/>
      * Returns false if failed
      * A return value of true doesn't always indicate success
      *

@@ -22,7 +22,6 @@
  */
 package net.techcable.techutils.uuid;
 
-import com.google.common.collect.Sets;
 import lombok.*;
 
 import java.util.Collection;
@@ -30,14 +29,17 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import com.google.common.collect.Sets;
+
 /**
  * A backup lookup first asks the primary lookup, and then asks the secondary lookup
- *
+ * <p/>
  * Useful to not completely rely on third-party services
  */
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class BackupLookup implements Lookup {
+
     private final Lookup primary, backup;
     private boolean treatNullsAsError = true;
 
@@ -47,7 +49,8 @@ public class BackupLookup implements Lookup {
         try {
             profile = primary.lookup(name);
             if (!treatNullsAsError && profile == null) return profile;
-        } catch (Throwable t) {}
+        } catch (Throwable t) {
+        }
         if (profile == null) {
             profile = backup.lookup(name);
         }
@@ -81,7 +84,8 @@ public class BackupLookup implements Lookup {
         try {
             profile = primary.lookup(id);
             if (!treatNullsAsError && profile == null) return profile;
-        } catch (Throwable t) {}
+        } catch (Throwable t) {
+        }
         if (profile == null) {
             profile = backup.lookup(id);
         }

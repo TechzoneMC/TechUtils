@@ -25,6 +25,7 @@ package net.techcable.techutils.entity.fake;
 import org.bukkit.entity.Player;
 
 public class FakeWither extends FakeEntity {
+
     public static final int MAX_HEALTH = 300;
     public static final int MOB_ID = 64;
 

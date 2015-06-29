@@ -22,15 +22,21 @@
  */
 package net.techcable.techutils.uuid;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
 
-import com.google.common.collect.Lists;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import static net.techcable.techutils.HttpUtils.*;
+import com.google.common.collect.Lists;
 
-public class MojangLookup implements  Lookup {
+import static net.techcable.techutils.HttpUtils.getJson;
+import static net.techcable.techutils.HttpUtils.postJson;
+
+public class MojangLookup implements Lookup {
 
 
     private List<PlayerProfile> postNames(Collection<String> names) { //This one doesn't cache
@@ -50,7 +56,7 @@ public class MojangLookup implements  Lookup {
         }
         return profiles;
     }
-    
+
     private PlayerProfile lookupProperties(UUID id) {
         Object rawResponse = getJson("https://sessionserver.mojang.com/session/minecraft/profile/" + id.toString().replace("-", ""));
         if (rawResponse == null || !(rawResponse instanceof JSONObject)) return null;
@@ -59,14 +65,14 @@ public class MojangLookup implements  Lookup {
         if (profile == null) return null;
         return profile;
     }
-    
+
     //Json Serialization
-    
+
     private PlayerProfile deserializeProfile(JSONObject json) {
         if (!json.containsKey("name") || !json.containsKey("id")) return null;
         if (!(json.get("name") instanceof String) || !(json.get("id") instanceof String)) return null;
         String name = (String) json.get("name");
-        UUID id = toUUID((String)json.get("id"));
+        UUID id = toUUID((String) json.get("id"));
         if (id == null) return null;
         PlayerProfile profile = new PlayerProfile(id, name);
         if (json.containsKey("properties") && json.get("properties") instanceof JSONArray) {
@@ -74,13 +80,13 @@ public class MojangLookup implements  Lookup {
         }
         return profile;
     }
-    
+
     //Utilities
-    
+
     private static String toString(UUID id) {
         return id.toString().replace("-", "");
     }
-    
+
     private static UUID toUUID(String raw) {
         String dashed;
         if (raw.length() == 32) {

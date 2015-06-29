@@ -22,17 +22,16 @@
  */
 package net.techcable.techutils.uuid;
 
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Setter;
-import org.json.simple.JSONArray;
+import lombok.*;
 
 import java.util.UUID;
+
+import org.json.simple.JSONArray;
 
 /**
  * Represnents a player
  * Contains their uuid and username
- *
+ * <p/>
  * This may or may not have properties
  *
  * @author Techcable

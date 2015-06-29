@@ -22,35 +22,35 @@
  */
 package net.techcable.techutils.config;
 
-import net.techcable.techutils.Reflection;
-import net.techcable.techutils.collect.Collections3;
-import net.techcable.techutils.config.seralizers.BooleanSerializer;
-import net.techcable.techutils.config.seralizers.ByteSeralizer;
-import net.techcable.techutils.config.seralizers.CharSerializer;
-import net.techcable.techutils.config.seralizers.DoubleSerializer;
-import net.techcable.techutils.config.seralizers.EnumSerializer;
-import net.techcable.techutils.config.seralizers.FloatSerializer;
-import net.techcable.techutils.config.seralizers.IntSeralizer;
-import net.techcable.techutils.config.seralizers.ListSerializer;
-import net.techcable.techutils.config.seralizers.LongSerializer;
-import net.techcable.techutils.config.seralizers.ShortSeralizer;
-import net.techcable.techutils.config.seralizers.StringSerializer;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.Set;
 
+import net.techcable.techutils.Reflection;
+import net.techcable.techutils.collect.Collections3;
+import net.techcable.techutils.config.seralizers.BooleanSerializer;
+import net.techcable.techutils.config.seralizers.ByteSeralizer;
+import net.techcable.techutils.config.seralizers.CharSerializer;
+import net.techcable.techutils.config.seralizers.DoubleSerializer;
+import net.techcable.techutils.config.seralizers.FloatSerializer;
+import net.techcable.techutils.config.seralizers.IntSeralizer;
+import net.techcable.techutils.config.seralizers.ListSerializer;
+import net.techcable.techutils.config.seralizers.LongSerializer;
+import net.techcable.techutils.config.seralizers.ShortSeralizer;
+import net.techcable.techutils.config.seralizers.StringSerializer;
+
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
+
 public class AnnotationConfig {
+
     static {
         addSerializer(new BooleanSerializer());
         addSerializer(new ByteSeralizer());
         addSerializer(new CharSerializer());
         addSerializer(new DoubleSerializer());
-        addSerializer(new EnumSerializer());
         addSerializer(new FloatSerializer());
         addSerializer(new IntSeralizer());
         addSerializer(new ListSerializer());
@@ -62,7 +62,9 @@ public class AnnotationConfig {
     public static void addSerializer(ConfigSerializer serializer) {
         serializers.add(serializer);
     }
+
     private static final Set<ConfigSerializer> serializers = Collections3.newConcurrentHashSet();
+
     public static ConfigSerializer getSerializer(Class<?> type) {
         for (ConfigSerializer serializer : serializers) {
             if (serializer.canHandle(type)) return serializer;

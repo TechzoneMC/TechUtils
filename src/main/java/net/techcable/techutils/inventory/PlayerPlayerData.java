@@ -22,12 +22,11 @@
  */
 package net.techcable.techutils.inventory;
 
+import lombok.*;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -40,189 +39,191 @@ import org.bukkit.potion.PotionEffectType;
 @AllArgsConstructor
 @Getter
 class PlayerPlayerData implements PlayerData {
-	private Player player;
 
-	@Override
-	public ItemStack getHelmet() {
-		return getInventory().getHelmet();
-	}
+    private Player player;
 
-	@Override
-	public ItemStack getChestplate() {
-		return getInventory().getChestplate();
-	}
+    @Override
+    public ItemStack getHelmet() {
+        return getInventory().getHelmet();
+    }
 
-	@Override
-	public ItemStack getLeggings() {
-		return getInventory().getLeggings();
-	}
+    @Override
+    public ItemStack getChestplate() {
+        return getInventory().getChestplate();
+    }
 
-	@Override
-	public ItemStack getBoots() {
-		return getInventory().getBoots();
-	}
+    @Override
+    public ItemStack getLeggings() {
+        return getInventory().getLeggings();
+    }
 
-	@Override
-	public void setHelmet(ItemStack helmet) {
-		getInventory().setHelmet(helmet);
-	}
+    @Override
+    public ItemStack getBoots() {
+        return getInventory().getBoots();
+    }
 
-	@Override
-	public void setChestplate(ItemStack chestplate) {
-		getInventory().setChestplate(chestplate);
-	}
+    @Override
+    public void setHelmet(ItemStack helmet) {
+        getInventory().setHelmet(helmet);
+    }
 
-	@Override
-	public void setLeggings(ItemStack leggings) {
-		getInventory().setLeggings(leggings);
-	}
+    @Override
+    public void setChestplate(ItemStack chestplate) {
+        getInventory().setChestplate(chestplate);
+    }
 
-	@Override
-	public void setBoots(ItemStack boots) {
-		getInventory().setBoots(boots);
-	}
+    @Override
+    public void setLeggings(ItemStack leggings) {
+        getInventory().setLeggings(leggings);
+    }
 
-	@Override
-	public float getExp() {
-		return getPlayer().getExp();
-	}
+    @Override
+    public void setBoots(ItemStack boots) {
+        getInventory().setBoots(boots);
+    }
 
-	@Override
-	public void setExp(float exp) {
-		getPlayer().setExp(exp);
-	}
+    @Override
+    public float getExp() {
+        return getPlayer().getExp();
+    }
 
-	@Override
-	public int getLevel() {
-		return getPlayer().getLevel();
-	}
+    @Override
+    public void setExp(float exp) {
+        getPlayer().setExp(exp);
+    }
 
-	@Override
-	public void setLevel(int level) {
-		getPlayer().setLevel(level);
-	}
+    @Override
+    public int getLevel() {
+        return getPlayer().getLevel();
+    }
 
-	@Override
-	public float getHealth() {
-		return (float) getPlayer().getHealth();
-	}
+    @Override
+    public void setLevel(int level) {
+        getPlayer().setLevel(level);
+    }
 
-	@Override
-	public void setHealth(float health) {
-		getPlayer().setHealth(health);
-	}
+    @Override
+    public float getHealth() {
+        return (float) getPlayer().getHealth();
+    }
 
-	@Override
-	public int getFoodLevel() {
-		return getPlayer().getFoodLevel();
-	}
+    @Override
+    public void setHealth(float health) {
+        getPlayer().setHealth(health);
+    }
 
-	@Override
-	public void setFoodLevel(int foodLevel) {
-		getPlayer().setFoodLevel(foodLevel);
-	}
+    @Override
+    public int getFoodLevel() {
+        return getPlayer().getFoodLevel();
+    }
 
-	@Override
-	public float getSaturation() {
-		return getPlayer().getSaturation();
-	}
+    @Override
+    public void setFoodLevel(int foodLevel) {
+        getPlayer().setFoodLevel(foodLevel);
+    }
 
-	@Override
-	public void setSaturation(float saturation) {
-		getPlayer().setSaturation(saturation);
-	}
+    @Override
+    public float getSaturation() {
+        return getPlayer().getSaturation();
+    }
 
-	@Override
-	public float getExhaustion() {
-		return getPlayer().getExhaustion();
-	}
+    @Override
+    public void setSaturation(float saturation) {
+        getPlayer().setSaturation(saturation);
+    }
 
-	@Override
-	public void setExhaustion(float exhaustion) {
-		getPlayer().setExhaustion(exhaustion);
-	}
+    @Override
+    public float getExhaustion() {
+        return getPlayer().getExhaustion();
+    }
 
-	@Override
-	public void setEnderchestItem(int slot, ItemStack item) {
-		getPlayer().getEnderChest().setItem(slot, item);
-	}
+    @Override
+    public void setExhaustion(float exhaustion) {
+        getPlayer().setExhaustion(exhaustion);
+    }
 
-	@Override
-	public ItemStack getEnderchestItem(int slot) {
-		return getPlayer().getEnderChest().getItem(slot);
-	}
+    @Override
+    public void setEnderchestItem(int slot, ItemStack item) {
+        getPlayer().getEnderChest().setItem(slot, item);
+    }
 
-	@Override
-	public ItemStack getItem(int slot) {
-		return getInventory().getItem(slot);
-	}
+    @Override
+    public ItemStack getEnderchestItem(int slot) {
+        return getPlayer().getEnderChest().getItem(slot);
+    }
 
-	@Override
-	public void setItem(int slot, ItemStack item) {
-		getInventory().setItem(slot, item);
-	}
+    @Override
+    public ItemStack getItem(int slot) {
+        return getInventory().getItem(slot);
+    }
 
-	@Override
-	public int getFireTicks() {
-		return getPlayer().getFireTicks();
-	}
+    @Override
+    public void setItem(int slot, ItemStack item) {
+        getInventory().setItem(slot, item);
+    }
 
-	@Override
-	public void setFireTicks(int ticks) {
-		getPlayer().setFireTicks(ticks);
-	}
+    @Override
+    public int getFireTicks() {
+        return getPlayer().getFireTicks();
+    }
 
-	@Override
-	public int getAir() {
-		return getPlayer().getRemainingAir();
-	}
+    @Override
+    public void setFireTicks(int ticks) {
+        getPlayer().setFireTicks(ticks);
+    }
 
-	@Override
-	public void setAir(int air) {
-		getPlayer().setRemainingAir(air);
-	}
+    @Override
+    public int getAir() {
+        return getPlayer().getRemainingAir();
+    }
 
-	@Override
-	public World getWorld() {
-		return getLocation().getWorld();
-	}
+    @Override
+    public void setAir(int air) {
+        getPlayer().setRemainingAir(air);
+    }
 
-	@Override
-	public Location getLocation() {
-		return getPlayer().getLocation();
-	}
+    @Override
+    public World getWorld() {
+        return getLocation().getWorld();
+    }
 
-	@Override
-	public void load() {}
+    @Override
+    public Location getLocation() {
+        return getPlayer().getLocation();
+    }
 
-	@Override
-	public void save() {
-		getPlayer().saveData();
-	}
+    @Override
+    public void load() {
+    }
 
-	@Override
-	public void addPotionEffect(PotionEffect effect) {
-		getPlayer().addPotionEffect(effect);
-	}
+    @Override
+    public void save() {
+        getPlayer().saveData();
+    }
 
-	@Override
-	public void addPotionEffects(Collection<PotionEffect> effects) {
-		getPlayer().addPotionEffects(effects);
-	}
+    @Override
+    public void addPotionEffect(PotionEffect effect) {
+        getPlayer().addPotionEffect(effect);
+    }
 
-	@Override
-	public Collection<PotionEffect> getPotionEffects() {
-		return getPlayer().getActivePotionEffects();
-	}
+    @Override
+    public void addPotionEffects(Collection<PotionEffect> effects) {
+        getPlayer().addPotionEffects(effects);
+    }
 
-	@Override
-	public void removePotionEffect(PotionEffectType type) {
-		getPlayer().removePotionEffect(type);
-	}
-	
-	public PlayerInventory getInventory() {
-		return getPlayer().getInventory();
-	}
+    @Override
+    public Collection<PotionEffect> getPotionEffects() {
+        return getPlayer().getActivePotionEffects();
+    }
+
+    @Override
+    public void removePotionEffect(PotionEffectType type) {
+        getPlayer().removePotionEffect(type);
+    }
+
+    public PlayerInventory getInventory() {
+        return getPlayer().getInventory();
+    }
 
     @Override
     public List<ItemStack> getArmor() {

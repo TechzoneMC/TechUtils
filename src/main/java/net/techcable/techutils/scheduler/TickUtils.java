@@ -22,32 +22,30 @@
  */
 package net.techcable.techutils.scheduler;
 
-import com.google.common.annotations.Beta;
-import com.google.common.base.Preconditions;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Synchronized;
-import net.techcable.techutils.Reflection;
-import net.techcable.techutils.proxy.MethodHandler;
-import net.techcable.techutils.proxy.TechProxy;
-import org.bukkit.Bukkit;
-import org.bukkit.scheduler.BukkitScheduler;
+import lombok.*;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Executor;
 
-import static net.techcable.techutils.Reflection.*;
+import net.techcable.techutils.Reflection;
+import net.techcable.techutils.proxy.MethodHandler;
+import net.techcable.techutils.proxy.TechProxy;
+
+import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitScheduler;
+
+import com.google.common.annotations.Beta;
+import com.google.common.base.Preconditions;
 
 @Beta
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TickUtils {
-    private static final Class<? extends BukkitScheduler> schedulerClass =  Bukkit.getScheduler().getClass();
+
+    private static final Class<? extends BukkitScheduler> schedulerClass = Bukkit.getScheduler().getClass();
 
     private static volatile long currentTick;
+
     public static long getCurrentTick() {
         return currentTick;
     }
@@ -58,14 +56,17 @@ public class TickUtils {
         for (Runnable tickListener : tickListeners) {
             try {
                 tickListener.run();
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
     }
 
     private static final Set<Runnable> tickListeners = new HashSet<>();
+
     private static void injectTicker() {
         Class<?> craftTaskClass = Reflection.getCbClass("scheduler.CraftTask");
         TechProxy proxy = TechProxy.create(new Object() {
+
             @MethodHandler("run")
             public void tick() {
                 TickUtils.tick();
@@ -80,6 +81,7 @@ public class TickUtils {
     }
 
     private static boolean setup;
+
     @Synchronized
     public static void addTickListener(Runnable tickListener) {
         tickListeners.add(tickListener);
@@ -90,6 +92,7 @@ public class TickUtils {
 
     @Getter
     private static final Executor mainThreadExecutor = new Executor() {
+
         @Override
         public void execute(Runnable command) {
             TechScheduler.scheduleSyncTask(command, 0);

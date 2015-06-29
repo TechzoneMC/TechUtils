@@ -22,15 +22,16 @@
  */
 package net.techcable.techutils.collect;
 
-import com.google.common.collect.Sets;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.google.common.collect.Sets;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Collections3 {
+
     public static <E> Set<E> newConcurrentHashSet() {
         return Sets.newSetFromMap(new ConcurrentHashMap<E, Boolean>());
     }

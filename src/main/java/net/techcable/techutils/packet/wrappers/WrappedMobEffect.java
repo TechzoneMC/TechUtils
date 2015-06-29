@@ -23,6 +23,7 @@
 package net.techcable.techutils.packet.wrappers;
 
 public class WrappedMobEffect {
+
     private Object handle;
 
     public Object getHandle() {

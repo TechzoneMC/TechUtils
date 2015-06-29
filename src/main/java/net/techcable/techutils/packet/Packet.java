@@ -22,50 +22,51 @@
  */
 package net.techcable.techutils.packet;
 
+import lombok.*;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import net.techcable.techutils.Reflection;
-import static net.techcable.techutils.Reflection.*;
-import static net.techcable.techutils.Reflection.getHandle;
 
 import org.bukkit.entity.Player;
 
-
-
-
-
-import lombok.*;
+import static net.techcable.techutils.Reflection.*;
 
 @Getter
 @Setter
 public abstract class Packet {
-	private Object handle;
+
+    private Object handle;
 
     private static Field playerConnectionField = makeField(getNmsClass("EntityPlayer"), "playerConnection");
     private static Method sendPacketMethod = makeMethod(getNmsClass("PlayerConnection"), "sendPacket", getNmsClass("Packet"));
-	public void sendTo(Player p) {
-		if (!isCompatible(p));
-		Object handle = Reflection.getHandle(p);
-		Object playerConnection = getField(playerConnectionField, handle);
-		callMethod(sendPacketMethod, playerConnection, getHandle());
-	}
-	
-	public abstract Class<?> getPacketClass();
-	
-	public boolean isCompatible(Player p) {
-		return true;
-	}
+
+    public void sendTo(Player p) {
+        if (!isCompatible(p)) ;
+        Object handle = Reflection.getHandle(p);
+        Object playerConnection = getField(playerConnectionField, handle);
+        callMethod(sendPacketMethod, playerConnection, getHandle());
+    }
+
+    public abstract Class<?> getPacketClass();
+
+    public boolean isCompatible(Player p) {
+        return true;
+    }
 
     // Utilities
     public static int toFixedPoint(double d) {
         return (int) Math.floor(d * 32.0D);
     }
+
     public static byte toByteAngle(double d) {
         return (byte) ((int) (d * 256.0F / 360.0F));
     }
+
     private static Field networkManagerField = makeField(getNmsClass("PlayerConnection"), "networkManager");
     private static Method getVersionMethod = makeMethod(getNmsClass("NetworkManager"), "getVersion");
+
     public static int getProtocolVersion(Player player) {
         Object handle = Reflection.getHandle(player);
         Object connection = getField(playerConnectionField, handle);
@@ -80,6 +81,7 @@ public abstract class Packet {
         int version = callMethod(getVersionMethod, networkManager);
         return version;
     }
+
     public static int[] doVelocityMagic(double velocityX, double velocityY, double velocityZ) {
         double d0 = 3.9D;
         if (velocityX < -d0) {
@@ -100,6 +102,6 @@ public abstract class Packet {
         if (velocityZ > d0) {
             velocityZ = d0;
         }
-        return new int[] {(int)(velocityX * 8000.0D), (int)(velocityY * 8000.0D), (int)(velocityZ * 8000.0D)}; //I wish methods could return multiple values
+        return new int[]{(int) (velocityX * 8000.0D), (int) (velocityY * 8000.0D), (int) (velocityZ * 8000.0D)}; //I wish methods could return multiple values
     }
 }

@@ -22,20 +22,20 @@
  */
 package net.techcable.techutils.scheduler;
 
+import lombok.*;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
+
+import net.techcable.techutils.collect.Either;
+
 import com.google.common.util.concurrent.AbstractFuture;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.MoreExecutors;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import net.techcable.techutils.collect.Either;
-
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ListenableFutureTechTask<V> extends AbstractFuture<V> implements FutureTechTask<V> {
+
     private final Either<Callable<V>, Runnable> task;
     @Getter
     private final boolean sync;
@@ -50,6 +50,7 @@ public class ListenableFutureTechTask<V> extends AbstractFuture<V> implements Fu
         }
         executor = sync ? MoreExecutors.sameThreadExecutor() : executor;
         Runnable runnable = task.hasFirst() ? new Runnable() {
+
             @Override
             public void run() {
                 try {
@@ -69,6 +70,7 @@ public class ListenableFutureTechTask<V> extends AbstractFuture<V> implements Fu
     @Override
     public void addCompletionListener(final Runnable r) {
         addCompletionListener(new CompletionListener<V>() {
+
             @Override
             public void onSuccess(V value) {
                 r.run();
@@ -99,6 +101,7 @@ public class ListenableFutureTechTask<V> extends AbstractFuture<V> implements Fu
     @Override
     public void addCompletionListener(final CompletionListener<V> listener) {
         addListener(new Runnable() {
+
             @Override
             public void run() {
                 V value = Futures.getUnchecked(ListenableFutureTechTask.this);

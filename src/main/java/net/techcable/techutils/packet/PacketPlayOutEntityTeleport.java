@@ -22,18 +22,20 @@
  */
 package net.techcable.techutils.packet;
 
-import org.bukkit.Location;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+
+import org.bukkit.Location;
 
 import static net.techcable.techutils.Reflection.*;
 
 /**
-* Created by Nicholas Schlabach on 4/16/2015.
-*/
+ * Created by Nicholas Schlabach on 4/16/2015.
+ */
 public class PacketPlayOutEntityTeleport extends Packet {
+
     public static final Class<?> PACKET_CLASS = getNmsClass("PacketPlayOutEntityTeleport");
+
     static {
         Field[] fields = PACKET_CLASS.getDeclaredFields();
         teleportEntityIdField = fields[0];
@@ -69,6 +71,7 @@ public class PacketPlayOutEntityTeleport extends Packet {
     private static Field teleportOnGroundField;
 
     private final Object handle;
+
     public Object getHandle() {
         return handle;
     }

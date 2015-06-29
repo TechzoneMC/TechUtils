@@ -29,6 +29,7 @@ import org.bukkit.entity.Player;
  * A fake dragon for 1.7 clients
  */
 public class FakeDragon extends FakeEntity {
+
     public static final byte ENTITY_TYPE = 63;
     public static final float MAX_HEALTH = 200;
 

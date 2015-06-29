@@ -22,11 +22,11 @@
  */
 package net.techcable.techutils.collect;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.*;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Either<T, U> {
+
     public static <T, U> Either<T, U> ofFirst(T first) {
         return new Either<>(first, null);
     }

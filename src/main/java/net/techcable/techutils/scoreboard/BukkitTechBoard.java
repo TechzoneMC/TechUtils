@@ -22,19 +22,22 @@
  */
 package net.techcable.techutils.scoreboard;
 
-import com.google.common.collect.ImmutableSet;
 import lombok.*;
+
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import net.techcable.techutils.entity.TechPlayer;
+
 import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * A no-flicker scoreboard manager that properly respects existing scoreboards
- *
+ * <p/>
  * <p>
  * Credits:
  * - DarkSaraphram (fireblast709) -- https://bukkit.org/threads/update-a-scoreboard-every-second-without-flashing.288265/
@@ -49,6 +52,7 @@ public class BukkitTechBoard extends TechBoard {
 
     @Getter
     private final TechPlayer player;
+
     public BukkitTechBoard(TechPlayer player) {
         this.player = player;
         if (player.getEntity().getScoreboard() == null) player.getEntity().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
@@ -80,6 +84,7 @@ public class BukkitTechBoard extends TechBoard {
     @Override
     protected void setScore(final String name, final int score) {
         changes.add(new ScoreboardChange() {
+
             @Override
             public void execute(Objective o) {
                 o.getScore(new FakeOfflinePlayer(name)).setScore(score);
@@ -90,6 +95,7 @@ public class BukkitTechBoard extends TechBoard {
     @Override
     protected void removeScore(final String name) {
         changes.add(new ScoreboardChange() {
+
             @Override
             public void execute(Objective o) {
                 o.getScoreboard().resetScores(new FakeOfflinePlayer(name));
@@ -136,6 +142,7 @@ public class BukkitTechBoard extends TechBoard {
     }
 
     public static interface ScoreboardChange {
+
         public void execute(Objective o);
     }
 }

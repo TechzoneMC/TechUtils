@@ -22,23 +22,27 @@
  */
 package net.techcable.techutils.scoreboard;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
 import lombok.*;
+
+import java.util.Collection;
+
 import net.techcable.techutils.TechPlugin;
 import net.techcable.techutils.entity.TechPlayer;
 
-import java.util.Collection;
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 
 /**
  * A scoreboard that relays its changes to all scoreboards
  */
 @RequiredArgsConstructor
 public class GlobalScoreboard extends TechBoard {
+
     private final TechPlugin plugin;
 
     public Collection<TechBoard> getAllBoards() {
         return Collections2.transform(plugin.getOnlinePlayers(), new Function<TechPlayer, TechBoard>() {
+
             @Override
             public TechBoard apply(TechPlayer player) {
                 return player.getScoreboard();

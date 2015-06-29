@@ -22,7 +22,7 @@
  */
 package net.techcable.techutils.packet;
 
-import lombok.Getter;
+import lombok.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -30,6 +30,7 @@ import java.lang.reflect.Field;
 import static net.techcable.techutils.Reflection.*;
 
 public class PacketPlayOutEntityDestroy extends Packet {
+
     private static final Class<?> PACKET_CLASS = getNmsClass("PacketPlayOutEntityDestroy");
     private static final Field toDestroy = PACKET_CLASS.getDeclaredFields()[0];
     private static final Constructor constructor = makeConstructor(PACKET_CLASS);

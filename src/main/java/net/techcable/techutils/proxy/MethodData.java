@@ -22,15 +22,17 @@
  */
 package net.techcable.techutils.proxy;
 
-import org.objectweb.asm.Type;
 import lombok.*;
 
 import java.lang.reflect.Method;
+
+import org.objectweb.asm.Type;
 
 @RequiredArgsConstructor
 @Getter
 @EqualsAndHashCode(of = {"name", "signature"})
 public class MethodData {
+
     public MethodData(org.objectweb.asm.commons.Method method) {
         this.signature = method.getDescriptor();
         this.name = method.getName();

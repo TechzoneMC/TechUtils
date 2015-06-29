@@ -22,9 +22,6 @@
  */
 package net.techcable.techutils;
 
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -32,7 +29,11 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+
 public class HttpUtils {
+
     private static JSONParser PARSER = new JSONParser();
 
     public static Object getJson(String rawUrl) {

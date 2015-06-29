@@ -34,61 +34,61 @@ import org.bukkit.entity.Player;
 
 /**
  * Loads the data of offline players
- * 
+ * <p/>
  * Should be compatible with versions later than 1.6.4
- * 
+ *
  * @author Techcable
  */
 class OfflinePlayerLoader {
-    
-   /**
+
+    /**
      * Returns the given players data
-     * 
+     * <p/>
      * Loads the player's data from its file if it is offline
      * If the player is online the online version is returned
-     * 
+     * <p/>
      * Players returned by this method may or may not be spawned and should only be used to access data
-     * 
+     *
      * @param name the player's name
-     * 
+     *
      * @return a player's data
-     * 
+     *
      * @throws RuntimeException if the loading failed
      */
     public static Player loadPlayer(String name) {
         return loadPlayer(Bukkit.getOfflinePlayer(name));
     }
-    
+
     /**
      * Returns the given players data
-     * 
+     * <p/>
      * Loads the player's data from its file if it is offline
      * If the player is online the online version is returned
-     * 
+     * <p/>
      * Players returned by this method may or may not be spawned and should only be used to access data
-     * 
+     *
      * @param id the player's uuid
-     * 
+     *
      * @return a player's data
-     * 
+     *
      * @throws RuntimeException if the loading failed
      */
     public static Player loadPlayer(UUID id) {
         return loadPlayer(Bukkit.getOfflinePlayer(id));
     }
-    
+
     /**
      * Returns the given players data
-     * 
+     * <p/>
      * Loads the player's data from its file if it is offline
      * If the player is online the online version is returned
-     * 
+     * <p/>
      * Players returned by this method may or may not be spawned and should only be used to access data
-     * 
+     *
      * @param player the player
-     * 
+     *
      * @return a player's data
-     * 
+     *
      * @throws RuntimeException if the loading failed
      */
     public static Player loadPlayer(OfflinePlayer player) {
@@ -98,7 +98,7 @@ class OfflinePlayerLoader {
         }
         return loadPlayer(player.getUniqueId(), player.getName());
     }
-    
+
     private static Player loadPlayer(UUID id, String name) {
         Object server = getHandle(Bukkit.getServer());
         Object interactManager = newPlayerInteractManager();
@@ -110,7 +110,7 @@ class OfflinePlayerLoader {
         Player player = (Player) getBukkitEntity(entityPlayer);
         return player;
     }
-    
+
     private static Object newGameProfile(UUID id, String name) {
         Class<?> gameProfileClass = getUtilClass("com.mojang.authlib.GameProfile");
         if (gameProfileClass == null) { //Before uuids
@@ -125,27 +125,27 @@ class OfflinePlayerLoader {
             return callConstructor(gameProfileConstructor, id, name);
         }
     }
-    
+
     private static Object newPlayerInteractManager() {
         Object worldServer = getWorldServer();
         Class<?> playerInteractClass = getNmsClass("PlayerInteractManager");
         Constructor c = makeConstructor(playerInteractClass, worldServer.getClass());
         return callConstructor(c, worldServer);
     }
-    
+
     private static Object getWorldServer() {
         Object server = getHandle(Bukkit.getServer());
         Method getWorldServer = makeMethod(server.getClass(), "getWorldServer", int.class);
         return callMethod(getWorldServer, server, 0);
     }
-    
+
     //NMS Utils
-    
+
     private static Entity getBukkitEntity(Object o) {
         Method getBukkitEntity = makeMethod(o.getClass(), "getBukkitEntity");
         return callMethod(getBukkitEntity, o);
     }
-    
+
     private static Class<?> getNmsClass(String name) {
         String className = "net.minecraft.server" + getVersion() + "." + name;
         try {
@@ -154,7 +154,7 @@ class OfflinePlayerLoader {
             return null;
         }
     }
-    
+
     private static Class<?> getUtilClass(String name) {
         try {
             return Class.forName(name); //Try before 1.8 first
@@ -166,60 +166,60 @@ class OfflinePlayerLoader {
             }
         }
     }
-    
+
     private static String getVersion() {
         Bukkit.getServer();
         String packageName = Bukkit.getServer().getClass().getPackage().getName();
         return packageName.substring(packageName.lastIndexOf('.') + 1);
     }
-    
+
     private static Object getHandle(Object wrapper) {
         Method getHandle = makeMethod(wrapper.getClass(), "getHandle");
         return callMethod(getHandle, wrapper);
     }
-    
+
     //Utils
     private static Method makeMethod(Class<?> clazz, String methodName, Class<?>... paramaters) {
-	    try {
-	        return clazz.getDeclaredMethod(methodName, paramaters);
-	    } catch (NoSuchMethodException ex) {
-	        return null;
-	    } catch (Exception ex) {
-		    throw new RuntimeException(ex);
-		}
-	}
-	
-	private static <T> T callMethod(Method method, Object instance, Object... paramaters) {
-	    if (method == null) throw new RuntimeException("No such method");
-	    method.setAccessible(true);
-	    try {
-	        return (T) method.invoke(instance, paramaters);
-	    } catch (InvocationTargetException ex) {
+        try {
+            return clazz.getDeclaredMethod(methodName, paramaters);
+        } catch (NoSuchMethodException ex) {
+            return null;
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    private static <T> T callMethod(Method method, Object instance, Object... paramaters) {
+        if (method == null) throw new RuntimeException("No such method");
+        method.setAccessible(true);
+        try {
+            return (T) method.invoke(instance, paramaters);
+        } catch (InvocationTargetException ex) {
             throw new RuntimeException(ex.getCause());
-		} catch (Exception ex) {
-		    throw new RuntimeException(ex);
-		}
-	}
-	
-	private static <T> Constructor<T> makeConstructor(Class<?> clazz, Class<?>... paramaterTypes) {
-	    try {
-	        return (Constructor<T>) clazz.getConstructor(paramaterTypes);
-	    } catch (NoSuchMethodException ex) {
-	        return null;
-	    } catch (Exception ex) {
-		    throw new RuntimeException(ex);
-		}
-	}
-	
-	private static <T> T callConstructor(Constructor<T> constructor, Object... paramaters) {
-	    if (constructor == null) throw new RuntimeException("No such constructor");
-	    constructor.setAccessible(true);
-	    try {
-	        return (T) constructor.newInstance(paramaters);
-	    } catch (InvocationTargetException ex) {
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    private static <T> Constructor<T> makeConstructor(Class<?> clazz, Class<?>... paramaterTypes) {
+        try {
+            return (Constructor<T>) clazz.getConstructor(paramaterTypes);
+        } catch (NoSuchMethodException ex) {
+            return null;
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    private static <T> T callConstructor(Constructor<T> constructor, Object... paramaters) {
+        if (constructor == null) throw new RuntimeException("No such constructor");
+        constructor.setAccessible(true);
+        try {
+            return (T) constructor.newInstance(paramaters);
+        } catch (InvocationTargetException ex) {
             throw new RuntimeException(ex.getCause());
-		} catch (Exception ex) {
-		    throw new RuntimeException(ex);
-		}
-	}
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 }

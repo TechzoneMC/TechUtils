@@ -22,19 +22,22 @@
  */
 package net.techcable.techutils.packet;
 
-import lombok.Getter;
-import net.techcable.techutils.packet.wrappers.WrappedDataWatcher;
-import org.bukkit.Location;
-import org.bukkit.util.Vector;
+import lombok.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+
+import net.techcable.techutils.packet.wrappers.WrappedDataWatcher;
+
+import org.bukkit.Location;
+import org.bukkit.util.Vector;
 
 import static net.techcable.techutils.Reflection.*;
 
 public class PacketPlayOutSpawnEntityLiving extends Packet {
 
     public static final Class<?> PACKET_CLASS = getNmsClass("PacketPlayOutSpawnEntityLiving");
+
     static {
         Field[] fields = PACKET_CLASS.getDeclaredFields();
         entityIdField = fields[0];
@@ -50,6 +53,7 @@ public class PacketPlayOutSpawnEntityLiving extends Packet {
         entityHeadPitchField = fields[10];
         entityDataWatcherField = fields[11];
     }
+
     private static Field entityIdField;
     private static Field entityTypeField;
     private static Field entityXField;
@@ -66,10 +70,11 @@ public class PacketPlayOutSpawnEntityLiving extends Packet {
 
     @Getter
     private final Object handle;
+
     public PacketPlayOutSpawnEntityLiving(int entityId, byte entityType, Location location, Vector bukkitVelocity, WrappedDataWatcher watcher) {
         this.handle = callConstructor(constructor);
         setField(entityIdField, handle, entityId);
-        setField(entityTypeField, handle, (int)entityType);
+        setField(entityTypeField, handle, (int) entityType);
         setField(entityXField, handle, toFixedPoint(location.getX()));
         setField(entityYField, handle, toFixedPoint(location.getY()));
         setField(entityZField, handle, toFixedPoint(location.getZ()));

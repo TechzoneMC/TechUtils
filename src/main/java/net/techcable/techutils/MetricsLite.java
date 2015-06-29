@@ -28,15 +28,6 @@
 
 package net.techcable.techutils;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.scheduler.BukkitTask;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -53,6 +44,15 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.zip.GZIPOutputStream;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.scheduler.BukkitTask;
 
 public class MetricsLite {
 
@@ -277,26 +277,26 @@ public class MetricsLite {
         // return => base/plugins/PluginMetrics/config.yml
         return new File(new File(pluginsFolder, "PluginMetrics"), "config.yml");
     }
-    
+
     /**
      * Gets the online player (backwards compatibility)
-     * 
+     *
      * @return online player amount
      */
     private int getOnlinePlayers() {
         try {
             Method onlinePlayerMethod = Server.class.getMethod("getOnlinePlayers");
-            if(onlinePlayerMethod.getReturnType().equals(Collection.class)) {
-                return ((Collection<?>)onlinePlayerMethod.invoke(Bukkit.getServer())).size();
+            if (onlinePlayerMethod.getReturnType().equals(Collection.class)) {
+                return ((Collection<?>) onlinePlayerMethod.invoke(Bukkit.getServer())).size();
             } else {
-                return ((Player[])onlinePlayerMethod.invoke(Bukkit.getServer())).length;
+                return ((Player[]) onlinePlayerMethod.invoke(Bukkit.getServer())).length;
             }
         } catch (Exception ex) {
             if (debug) {
                 Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
             }
         }
-        
+
         return 0;
     }
 
@@ -411,6 +411,7 @@ public class MetricsLite {
      * GZip compress a string of bytes
      *
      * @param input
+     *
      * @return
      */
     public static byte[] gzip(String input) {
@@ -452,6 +453,7 @@ public class MetricsLite {
      * @param json
      * @param key
      * @param value
+     *
      * @throws UnsupportedEncodingException
      */
     private static void appendJSONPair(StringBuilder json, String key, String value) throws UnsupportedEncodingException {
@@ -484,6 +486,7 @@ public class MetricsLite {
      * Escape a string to create a valid JSON string
      *
      * @param text
+     *
      * @return
      */
     private static String escapeJSON(String text) {
@@ -530,6 +533,7 @@ public class MetricsLite {
      * Encode text as UTF-8
      *
      * @param text the text to encode
+     *
      * @return the encoded text, as UTF-8
      */
     private static String urlEncode(final String text) throws UnsupportedEncodingException {

@@ -35,11 +35,12 @@ public interface FutureTechTask<V> extends TechTask {
      * @param listener the completion listener to add
      */
     public void addCompletionListener(CompletionListener<V> listener);
+
     /**
      * A listener for success of a techtask
-     *
      */
     public static interface CompletionListener<V> {
+
         public void onSuccess(V value);
     }
 }

@@ -28,6 +28,7 @@ import lombok.*;
 @Getter
 @Setter
 public class Pair<T, U> {
-	private T first;
-	private U second;
+
+    private T first;
+    private U second;
 }

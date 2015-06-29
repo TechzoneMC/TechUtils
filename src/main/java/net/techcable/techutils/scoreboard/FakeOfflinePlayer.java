@@ -22,21 +22,24 @@
  */
 package net.techcable.techutils.scoreboard;
 
-import com.google.common.collect.Maps;
 import lombok.*;
+
+import java.util.Map;
+import java.util.UUID;
+
 import net.techcable.techutils.uuid.UUIDUtils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import com.google.common.collect.Maps;
 
 @RequiredArgsConstructor
 @EqualsAndHashCode(of = {"name"})
 public class FakeOfflinePlayer implements OfflinePlayer {
+
     private final String name;
 
     @Override
@@ -53,6 +56,7 @@ public class FakeOfflinePlayer implements OfflinePlayer {
     }
 
     private UUID id;
+
     @Override
     public UUID getUniqueId() {
         if (id == null) {

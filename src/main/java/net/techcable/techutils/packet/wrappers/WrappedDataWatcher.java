@@ -34,15 +34,17 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import static net.techcable.techutils.Reflection.*;
 
 /**
-* Created by Nicholas Schlabach on 4/16/2015.
-*/
+ * Created by Nicholas Schlabach on 4/16/2015.
+ */
 public class WrappedDataWatcher {
+
     //Fields
     private final static Class<?> clazz = getNmsClass("DataWatcher");
     private final static Constructor constructor = makeConstructor(clazz, getNmsClass("Entity"));
     private static Field valueMap;
     private static Field typeMap;
     private static Field lockField;
+
     static {
         for (Field field : clazz.getDeclaredFields()) {
             if (field.getType().equals(Map.class)) {
@@ -78,7 +80,7 @@ public class WrappedDataWatcher {
     }
 
     public WrappedDataWatcher() {
-        this.handle = callConstructor(constructor, new Object[] {null});
+        this.handle = callConstructor(constructor, new Object[]{null});
     }
 
     public boolean hasIndex(int index) {
@@ -123,11 +125,13 @@ public class WrappedDataWatcher {
     }
 
     private final Object handle;
+
     public Object getHandle() {
         return handle;
     }
 
     private static class WrappedWatchableObject {
+
         static {
             for (Field field : getHandleClass().getDeclaredFields()) {
                 if (field.getType().equals(Object.class)) {
@@ -150,6 +154,7 @@ public class WrappedDataWatcher {
         private final Object handle;
 
         private static Field valueField;
+
         public Object getHandle() {
             return handle;
         }

@@ -22,23 +22,29 @@
  */
 package net.techcable.techutils.entity.fake;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import net.techcable.techutils.packet.*;
+import lombok.*;
+
+import java.lang.reflect.Field;
+
+import net.techcable.techutils.packet.Packet;
+import net.techcable.techutils.packet.PacketPlayOutEntityDestroy;
+import net.techcable.techutils.packet.PacketPlayOutEntityMetadata;
+import net.techcable.techutils.packet.PacketPlayOutEntityTeleport;
+import net.techcable.techutils.packet.PacketPlayOutSpawnEntityLiving;
 import net.techcable.techutils.packet.wrappers.WrappedDataWatcher;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import java.lang.reflect.Field;
-
 import static net.techcable.techutils.Reflection.*;
 
 /**
-* Created by Nicholas Schlabach on 4/16/2015.
-*/
+ * Created by Nicholas Schlabach on 4/16/2015.
+ */
 @RequiredArgsConstructor
 public abstract class FakeEntity {
+
     static {
         //Create fake Entity ID
         Field entityCountField = makeField(getNmsClass("Entity"), "entityCount");
@@ -46,6 +52,7 @@ public abstract class FakeEntity {
         fakeEntityId = entityCount++;
         setField(entityCountField, null, entityCount);
     }
+
     @Getter
     private boolean spawned = false;
 
@@ -122,5 +129,6 @@ public abstract class FakeEntity {
     }
 
     public abstract float getMaxHealth();
+
     public abstract byte getMobTypeId();
 }

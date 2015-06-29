@@ -35,87 +35,121 @@ import org.bukkit.potion.PotionEffectType;
  * Represents a player's data
  * <br>
  * May be a immutable snapshot of the state of a player's inventory or just reflect the current state of the player
- * <p>
+ * <p/>
  * This includes
  * <ul>
- *  <li>Inventory</li>
- *  <li>Armor</li>
- *  <li>Experience</li>
- *  <li>Health</li>
- *  <li>Food</li>
- *  <li>Enderchest</li>
- *  <li>Fire Time</li>
- *  <li>Air Time</li>
- *  <li>Location</li>
- *  <li>Potion Effects</li>
+ * <li>Inventory</li>
+ * <li>Armor</li>
+ * <li>Experience</li>
+ * <li>Health</li>
+ * <li>Food</li>
+ * <li>Enderchest</li>
+ * <li>Fire Time</li>
+ * <li>Air Time</li>
+ * <li>Location</li>
+ * <li>Potion Effects</li>
  * </ul>
  */
 public interface PlayerData {
+
     //Armor0 Getting and Setting Methods
     public List<ItemStack> getArmor();
+
     public ItemStack getHelmet();
+
     public ItemStack getChestplate();
+
     public ItemStack getLeggings();
+
     public ItemStack getBoots();
+
     public void setArmor(List<? extends ItemStack> armor);
+
     public void setHelmet(ItemStack helmet);
+
     public void setChestplate(ItemStack chestplate);
+
     public void setLeggings(ItemStack leggings);
+
     public void setBoots(ItemStack boots);
-    
+
     //Exp Methods
     public float getExp();
+
     public void setExp(float exp);
+
     public int getLevel();
+
     public void setLevel(int level);
-    
+
     //Food And Health Methods
     public float getHealth();
+
     public void setHealth(float health);
+
     public int getFoodLevel();
+
     public void setFoodLevel(int foodLevel);
+
     public float getSaturation();
+
     public void setSaturation(float saturation);
+
     public float getExhaustion();
+
     public void setExhaustion(float exhaustion);
-    
+
     //EnderChest
     public List<ItemStack> getEnderchest();
+
     public void setEnderchest(List<ItemStack> enderchest);
+
     public void setEnderchestItem(int slot, ItemStack item);
+
     public ItemStack getEnderchestItem(int slot);
-    
+
     //Main Inventory
     public List<ItemStack> getItems();
+
     public void setItems(List<ItemStack> items);
+
     public ItemStack getItem(int slot);
+
     public void setItem(int slot, ItemStack item);
-    
+
     //Fire and Air (Sounds Like Avatar)
     public int getFireTicks();
+
     public void setFireTicks(int ticks);
+
     public int getAir();
+
     public void setAir(int air);
-    
+
     //Location
     public World getWorld();
+
     public Location getLocation();
-    
+
     //Abstract IO Methods
     public void load();
+
     public void save();
-    
+
     //PotionEffects
     public void addPotionEffect(PotionEffect effect);
+
     public void addPotionEffects(Collection<PotionEffect> effects);
+
     public Collection<PotionEffect> getPotionEffects();
+
     public void removePotionEffect(PotionEffectType type);
-    
+
     /**
      * Get an immutable snapshot of the current state of this player data
      * <br>
      * If this object is immutable may return itself
-     * 
+     *
      * @return immutable snapshot of current state
      */
     public PlayerData getSnapshot();

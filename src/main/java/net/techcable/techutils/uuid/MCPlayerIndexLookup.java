@@ -22,18 +22,15 @@
  */
 package net.techcable.techutils.uuid;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
-import java.awt.image.LookupOp;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import static net.techcable.techutils.HttpUtils.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import static net.techcable.techutils.HttpUtils.getJson;
 
 public class MCPlayerIndexLookup implements Lookup {
 
@@ -76,7 +73,7 @@ public class MCPlayerIndexLookup implements Lookup {
         if (!json.containsKey("name") || !json.containsKey("id")) return null;
         if (!(json.get("name") instanceof String) || !(json.get("id") instanceof String)) return null;
         String name = (String) json.get("name");
-        UUID id = toUUID((String)json.get("id"));
+        UUID id = toUUID((String) json.get("id"));
         if (id == null) return null;
         PlayerProfile profile = new PlayerProfile(id, name);
         if (json.containsKey("properties") && json.get("properties") instanceof JSONArray) {

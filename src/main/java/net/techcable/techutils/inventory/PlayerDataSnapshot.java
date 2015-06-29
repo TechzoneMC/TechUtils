@@ -28,34 +28,38 @@
 
 package net.techcable.techutils.inventory;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import java.util.Collection;
 import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+
 /**
- * A 
- * 
+ * A
+ * <p/>
  * <ul>
- *  <li>Inventory</li>
- *  <li>Armor</li>
- *  <li>Experience</li>
- *  <li>Health</li>
- *  <li>Food</li>
- *  <li>Enderchest</li>
- *  <li>Fire Time</li>
- *  <li>Air Time</li>
- *  <li>Location</li>
- *  <li>Potion Effects</li>
+ * <li>Inventory</li>
+ * <li>Armor</li>
+ * <li>Experience</li>
+ * <li>Health</li>
+ * <li>Food</li>
+ * <li>Enderchest</li>
+ * <li>Fire Time</li>
+ * <li>Air Time</li>
+ * <li>Location</li>
+ * <li>Potion Effects</li>
  * </ul>
+ *
  * @author Nicholas Schlabach
  */
 public class PlayerDataSnapshot implements PlayerData {
+
     private final ImmutableList<ItemStack> items;
     private final ImmutableList<ItemStack> armor;
     private final float experience;
@@ -69,7 +73,7 @@ public class PlayerDataSnapshot implements PlayerData {
     private final int air;
     private final Location location;
     private final ImmutableSet<PotionEffect> potions;
-    
+
     public PlayerDataSnapshot(List<ItemStack> items, List<ItemStack> armor, float experience, int xpLevel, float health, int food, float saturation, float exhaustion, List<ItemStack> enderchest, int fire, int air, Location location, Collection<PotionEffect> potions) {
         this.items = clone(items);
         this.armor = clone(armor);
@@ -85,11 +89,11 @@ public class PlayerDataSnapshot implements PlayerData {
         this.location = location.clone();
         this.potions = ImmutableSet.copyOf(potions);
     }
-    
+
     protected PlayerDataSnapshot(PlayerData old) {
         this(old.getItems(), old.getArmor(), old.getExp(), old.getLevel(), old.getHealth(), old.getFoodLevel(), old.getSaturation(), old.getExhaustion(), old.getEnderchest(), old.getFireTicks(), old.getAir(), old.getLocation(), old.getPotionEffects());
     }
-    
+
     private static ImmutableList<ItemStack> clone(List<ItemStack> originals) {
         ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
         for (ItemStack original : originals) {
@@ -99,8 +103,7 @@ public class PlayerDataSnapshot implements PlayerData {
         return builder.build();
     }
 
-    
-    
+
     //Getters
 
     @Override
@@ -127,6 +130,7 @@ public class PlayerDataSnapshot implements PlayerData {
     public ItemStack getBoots() {
         return armor.get(0).clone();
     }
+
     @Override
     public float getExp() {
         return experience;
@@ -206,14 +210,16 @@ public class PlayerDataSnapshot implements PlayerData {
     public PlayerData getSnapshot() {
         return this;
     }
-    
+
     //NO-OPS
     @Override
-    public void load() {}
-    
+    public void load() {
+    }
+
     @Override
-    public void save() {}
-    
+    public void save() {
+    }
+
     //Unsupported
 
     @Override
@@ -300,7 +306,7 @@ public class PlayerDataSnapshot implements PlayerData {
     public void setAir(int air) {
         throw new UnsupportedOperationException("You can't edit immutable objects");
     }
-    
+
     @Override
     public void addPotionEffect(PotionEffect effect) {
         throw new UnsupportedOperationException("You can't edit immutable objects");
