@@ -46,6 +46,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public class AnnotationConfig {
 
+    private static final Set<ConfigSerializer> serializers = Collections3.newConcurrentHashSet();
+
+    public static void addSerializer(ConfigSerializer serializer) {
+        serializers.add(serializer);
+    }
+
     static {
         addSerializer(new BooleanSerializer());
         addSerializer(new ByteSeralizer());
@@ -58,12 +64,6 @@ public class AnnotationConfig {
         addSerializer(new ShortSeralizer());
         addSerializer(new StringSerializer());
     }
-
-    public static void addSerializer(ConfigSerializer serializer) {
-        serializers.add(serializer);
-    }
-
-    private static final Set<ConfigSerializer> serializers = Collections3.newConcurrentHashSet();
 
     public static ConfigSerializer getSerializer(Class<?> type) {
         for (ConfigSerializer serializer : serializers) {
