@@ -34,11 +34,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
             <version>2.3.1</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm-all</artifactId>
-            <version>4.1</version>
-        </dependency>
     </dependencies>
 
     <build>

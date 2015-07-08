@@ -24,17 +24,29 @@ package net.techcable.techutils.scheduler;
 
 import lombok.*;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
+import java.util.logging.Logger;
 
 import net.techcable.techutils.Reflection;
-import net.techcable.techutils.proxy.MethodHandler;
-import net.techcable.techutils.proxy.TechProxy;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Server;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.generator.ChunkGenerator;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginLoader;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import com.avaje.ebean.EbeanServer;
 import com.google.common.annotations.Beta;
 import com.google.common.base.Preconditions;
 
@@ -64,20 +76,13 @@ public class TickUtils {
     private static final Set<Runnable> tickListeners = new HashSet<>();
 
     private static void injectTicker() {
-        Class<?> craftTaskClass = Reflection.getCbClass("scheduler.CraftTask");
-        TechProxy proxy = TechProxy.create(new Object() {
+        Bukkit.getScheduler().runTaskTimer(new FakePlugin(), new Runnable() {
 
-            @MethodHandler("run")
-            public void tick() {
-                TickUtils.tick();
+            @Override
+            public void run() {
+                tick();
             }
-
-            @MethodHandler("getPeriod")
-            public long getPeriod() {
-                return 1;
-            }
-        }, craftTaskClass);
-        Reflection.callMethod(Reflection.makeMethod(Bukkit.getScheduler().getClass(), "addTask", craftTaskClass), Bukkit.getScheduler(), proxy.newInstance());
+        }, 0, 1);
     }
 
     private static boolean setup;
@@ -98,4 +103,117 @@ public class TickUtils {
             TechScheduler.scheduleSyncTask(command, 0);
         }
     };
+
+    public static class FakePlugin implements Plugin {
+
+        @Override
+        public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+            return null;
+        }
+
+        @Override
+        public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+            return false;
+        }
+
+        @Override
+        public File getDataFolder() {
+            return null;
+        }
+
+        @Override
+        public PluginDescriptionFile getDescription() {
+            return new PluginDescriptionFile("TickUtils", "1.1.0", TickUtils.class.getName());
+        }
+
+        @Override
+        public FileConfiguration getConfig() {
+            return null;
+        }
+
+        @Override
+        public InputStream getResource(String filename) {
+            return null;
+        }
+
+        @Override
+        public void saveConfig() {
+
+        }
+
+        @Override
+        public void saveDefaultConfig() {
+
+        }
+
+        @Override
+        public void saveResource(String resourcePath, boolean replace) {
+
+        }
+
+        @Override
+        public void reloadConfig() {
+
+        }
+
+        @Override
+        public PluginLoader getPluginLoader() {
+            return null;
+        }
+
+        @Override
+        public Server getServer() {
+            return Bukkit.getServer();
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return true;
+        }
+
+        @Override
+        public void onDisable() {
+
+        }
+
+        @Override
+        public void onLoad() {
+
+        }
+
+        @Override
+        public void onEnable() {
+
+        }
+
+        @Override
+        public boolean isNaggable() {
+            return false;
+        }
+
+        @Override
+        public void setNaggable(boolean canNag) {
+
+        }
+
+        @Override
+        public EbeanServer getDatabase() {
+            return null;
+        }
+
+        @Override
+        public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
+            return null;
+        }
+
+        @Override
+        public Logger getLogger() {
+            return null;
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+    }
 }
