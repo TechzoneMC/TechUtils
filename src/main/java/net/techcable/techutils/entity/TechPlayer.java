@@ -69,6 +69,15 @@ public class TechPlayer {
     }
 
     /**
+     * Returns if the player is online
+     *
+     * @return if the player is online
+     */
+    public boolean isOnline() {
+        return getEntity() != null; // isOnline() is stupid and just does Bukkit.getPlayer() in an inefficient way
+    }
+
+    /**
      * Retreive this player's username
      *
      * @return this player's username
@@ -80,11 +89,17 @@ public class TechPlayer {
     }
 
     final void destroy() {
+        if (scoreboard != null) scoreboard.cleanup();
         cleanup();
     }
 
     private TechBoard scoreboard;
 
+    /**
+     * Get the player's scoreboard, creating it if it doesn't exist
+     *
+     * @return the player's scoreboard, creating it if it doesn't exist
+     */
     public TechBoard getScoreboard() {
         if (scoreboard == null) {
             scoreboard = new BukkitTechBoard(this);
@@ -96,7 +111,7 @@ public class TechPlayer {
      * Perform any necessary cleanup actions
      */
     protected void cleanup() {
-        if (scoreboard != null) scoreboard.cleanup();
+
     }
 
     public final boolean equals(Object other) {

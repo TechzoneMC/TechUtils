@@ -26,17 +26,17 @@ import lombok.*;
 
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.WeakHashMap;
 
 import net.techcable.techutils.TechPlugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Controls the plugin's TechPlayers
@@ -44,34 +44,35 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class PlayerManager<T extends TechPlayer> implements Listener {
 
     public PlayerManager(TechPlugin<T> plugin) {
-        plugin.registerListener(this);
         this.plugin = plugin;
+        plugin.registerListener(this);
     }
 
     @Getter(AccessLevel.PACKAGE)
     private final TechPlugin<T> plugin;
 
-    private final Map<UUID, T> players = new ConcurrentHashMap<>();
+    private final Map<Player, T> players = new WeakHashMap<>();
 
     public boolean isKnown(UUID id) {
-        return players.containsKey(id);
+        return isKnown(Bukkit.getPlayer(id));
     }
 
     public boolean isKnown(Player player) {
-        return isKnown(player.getUniqueId());
+        return players.containsKey(player);
     }
 
     public T getPlayer(UUID id) {
-        if (Bukkit.getPlayer(id) == null) return null;
-        if (!isKnown(id)) {
-            T created = getPlugin().createPlayer(id);
-            players.put(id, created);
-        }
-        return players.get(id);
+        Player player = Bukkit.getPlayer(id);
+        return getPlayer(player);
     }
 
     public T getPlayer(Player player) {
-        return getPlayer(player.getUniqueId());
+        if (player == null) return null;
+        if (!isKnown(player)) {
+            T created = getPlugin().createPlayer(player.getUniqueId());
+            players.put(player, created);
+        }
+        return players.get(player);
     }
 
     public void onShutdown() {
@@ -81,20 +82,28 @@ public class PlayerManager<T extends TechPlayer> implements Listener {
         players.clear();
     }
 
-    public void onQuit(Player playerEntity) {
-        if (!isKnown(playerEntity)) return;
-        T player = getPlayer(playerEntity);
-        player.destroy();
-        players.remove(playerEntity.getUniqueId());
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onKick(PlayerKickEvent event) {
-        onQuit(event.getPlayer());
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        onQuit(event.getPlayer());
+        final TechPlayer player = getPlayer(event.getPlayer());
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                player.destroy();
+            }
+        }.runTaskLater(plugin, 1);
+    }
+
+
+    @EventHandler
+    public void onQuit(PlayerKickEvent event) {
+        final TechPlayer player = getPlayer(event.getPlayer());
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                player.destroy();
+            }
+        }.runTaskLater(plugin, 1);
     }
 }
