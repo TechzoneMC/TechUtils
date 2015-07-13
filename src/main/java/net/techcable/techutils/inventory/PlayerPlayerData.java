@@ -24,9 +24,12 @@ package net.techcable.techutils.inventory;
 
 import lombok.*;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
+import net.techcable.techutils.Reflection;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -107,9 +110,11 @@ class PlayerPlayerData implements PlayerData {
         return (float) getPlayer().getHealth();
     }
 
+    private static final Method setHealthMethod = Reflection.makeMethod(Reflection.getNmsClass("EntityLiving"), "setHealth", float.class);
+
     @Override
     public void setHealth(float health) {
-        getPlayer().setHealth(health);
+        Reflection.callMethod(setHealthMethod, Reflection.getHandle(player), health); // Don't kill the player at zero health
     }
 
     @Override
