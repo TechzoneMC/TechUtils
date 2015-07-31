@@ -76,14 +76,20 @@ public class AnnotationConfig {
 
     public void load(File configFile, URL defaultConfigUrl) throws IOException, InvalidConfigurationException {
         YamlConfiguration existingConfig;
+        boolean shouldSave = false;
         if (configFile.exists()) {
             existingConfig = YamlConfiguration.loadConfiguration(configFile);
         } else {
             existingConfig = new YamlConfiguration();
+            shouldSave = true;
         }
         YamlConfiguration config = YamlConfiguration.loadConfiguration(defaultConfigUrl.openStream());
-        for (String key : existingConfig.getKeys(true)) {
-            config.set(key, existingConfig.get(key));
+        for (String key : config.getKeys(true)) {
+            if (!existingConfig.contains(key)) {
+                shouldSave = true;
+            } else {
+                config.set(key, existingConfig.get(key));
+            }
         }
         for (Field field : getClass().getDeclaredFields()) {
             if (!field.isAnnotationPresent(Setting.class)) continue;
@@ -101,6 +107,7 @@ public class AnnotationConfig {
             }
             Reflection.setField(field, this, java);
         }
+        if (shouldSave) config.save(configFile);
     }
 
     public void save(File configFile, URL defaultConfigUrl) throws IOException, InvalidConfigurationException {
@@ -117,5 +124,6 @@ public class AnnotationConfig {
             Object yamlValue = getSerializer(rawValue.getClass()).serialize(rawValue);
             defaultConfig.set(key, yamlValue);
         }
+        defaultConfig.save(configFile);
     }
 }
