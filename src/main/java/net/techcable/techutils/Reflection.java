@@ -29,6 +29,8 @@ import java.lang.reflect.Method;
 
 import org.bukkit.Bukkit;
 
+import com.google.common.base.Preconditions;
+
 public class Reflection {
 
     public static Class<?> getNmsClass(String name) {
@@ -156,4 +158,39 @@ public class Reflection {
             return null;
         }
     }
+
+    // Fuzzy reflection
+
+    public static Field getOnlyField(Class<?> toGetFrom, Class<?> type) {
+        Field only = null;
+        for (Field field : toGetFrom.getDeclaredFields()) {
+            if (!type.isAssignableFrom(field.getClass())) continue;
+            Preconditions.checkArgument(only == null, "More than one field of type %s on %s: %s and %s", type.getSimpleName(), toGetFrom.getSimpleName(), field.getName(), only.getName());
+            only = field;
+        }
+        return only;
+    }
+
+    public static Method getOnlyMethod(Class<?> toGetFrom, Class<?> returnType, Class<?>... paramSpec) {
+        Method only = null;
+        for (Method method : toGetFrom.getDeclaredMethods()) {
+            if (!returnType.isAssignableFrom(method.getReturnType())) continue;
+            if (!isParamsMatchSpec(method.getParameterTypes(), paramSpec)) continue;
+            Preconditions.checkArgument(only == null, "More than one method matching spec on %s" + ((only.getName().equals(method.getName())) ? "" : ": " + only.getName() + " " + method.getName()), toGetFrom.getSimpleName());
+            only = method;
+        }
+        return only;
+    }
+
+    public static boolean isParamsMatchSpec(Class<?>[] parameters, Class<?>... paramSpec) {
+        if (parameters.length > paramSpec.length) return false;
+        for (int i = 0; i < paramSpec.length; i++) {
+            Class<?> spec = paramSpec[i];
+            if (spec == null) continue;
+            Class parameter = parameters[i];
+            if (!spec.isAssignableFrom(parameter)) return false;
+        }
+        return true;
+    }
+
 }
