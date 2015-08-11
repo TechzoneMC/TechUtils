@@ -22,6 +22,8 @@
  */
 package net.techcable.techutils.config.seralizers;
 
+import java.lang.annotation.Annotation;
+
 import net.techcable.techutils.config.ConfigSerializer;
 
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -29,17 +31,22 @@ import org.bukkit.configuration.InvalidConfigurationException;
 public class LongSerializer implements ConfigSerializer<Long> {
 
     @Override
-    public Object serialize(Long aLong) {
+    public Object serialize(Long aLong, Annotation[] annotations) {
         return aLong;
     }
 
     @Override
-    public Long deserialize(Object yaml, Class<? extends Long> type) throws InvalidConfigurationException {
+    public Long deserialize(Object yaml, Class<? extends Long> type, Annotation[] annotations) throws InvalidConfigurationException {
         return (Long) yaml;
     }
 
     @Override
-    public boolean canHandle(Class<?> type) {
+    public boolean canDeserialize(Class<?> type) {
         return type == long.class || type == Long.class;
+    }
+
+    @Override
+    public boolean canSerialize(Class<?> type) {
+        return canDeserialize(type);
     }
 }

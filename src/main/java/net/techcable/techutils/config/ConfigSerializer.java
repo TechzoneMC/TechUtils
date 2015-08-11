@@ -22,20 +22,24 @@
  */
 package net.techcable.techutils.config;
 
+import java.lang.annotation.Annotation;
+
 import org.bukkit.configuration.InvalidConfigurationException;
 
 public interface ConfigSerializer<T> {
 
     /**
      * Serialize the specified object to a yaml representation
-     *
      * @param t the object to seralize
      *
-     * @return the yaml representation of the object
+     * @param annotations @return the yaml representation of the object
      */
-    public Object serialize(T t);
+    public Object serialize(T t, Annotation[] annotations);
 
-    public T deserialize(Object yaml, Class<? extends T> type) throws InvalidConfigurationException;
+    public T deserialize(Object yaml, Class<? extends T> type, Annotation[] annotations) throws InvalidConfigurationException;
 
-    public boolean canHandle(Class<?> type);
+    public boolean canDeserialize(Class<?> type);
+
+    public boolean canSerialize(Class<?> type);
+
 }

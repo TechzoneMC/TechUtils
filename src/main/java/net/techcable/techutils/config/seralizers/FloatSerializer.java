@@ -22,6 +22,8 @@
  */
 package net.techcable.techutils.config.seralizers;
 
+import java.lang.annotation.Annotation;
+
 import net.techcable.techutils.config.ConfigSerializer;
 
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -29,17 +31,22 @@ import org.bukkit.configuration.InvalidConfigurationException;
 public class FloatSerializer implements ConfigSerializer<Float> {
 
     @Override
-    public Object serialize(Float aFloat) {
+    public Object serialize(Float aFloat, Annotation[] annotations) {
         return aFloat;
     }
 
     @Override
-    public Float deserialize(Object yaml, Class<? extends Float> type) throws InvalidConfigurationException {
+    public Float deserialize(Object yaml, Class<? extends Float> type, Annotation[] annotations) throws InvalidConfigurationException {
         return (Float) yaml;
     }
 
     @Override
-    public boolean canHandle(Class<?> type) {
+    public boolean canDeserialize(Class<?> type) {
         return type == float.class || type == Float.class;
+    }
+
+    @Override
+    public boolean canSerialize(Class<?> type) {
+        return canDeserialize(type);
     }
 }

@@ -22,6 +22,8 @@
  */
 package net.techcable.techutils.config.seralizers;
 
+import java.lang.annotation.Annotation;
+
 import net.techcable.techutils.config.ConfigSerializer;
 
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -29,17 +31,22 @@ import org.bukkit.configuration.InvalidConfigurationException;
 public class DoubleSerializer implements ConfigSerializer<Double> {
 
     @Override
-    public Object serialize(Double aDouble) {
+    public Object serialize(Double aDouble, Annotation[] annotations) {
         return aDouble;
     }
 
     @Override
-    public Double deserialize(Object yaml, Class<? extends Double> type) throws InvalidConfigurationException {
+    public Double deserialize(Object yaml, Class<? extends Double> type, Annotation[] annotations) throws InvalidConfigurationException {
         return (Double) yaml;
     }
 
     @Override
-    public boolean canHandle(Class<?> type) {
+    public boolean canDeserialize(Class<?> type) {
         return type == double.class || type == Double.class;
+    }
+
+    @Override
+    public boolean canSerialize(Class<?> type) {
+        return canDeserialize(type);
     }
 }

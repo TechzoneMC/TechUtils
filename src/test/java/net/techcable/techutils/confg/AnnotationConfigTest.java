@@ -28,9 +28,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import net.techcable.techutils.config.AnnotationConfig;
 import net.techcable.techutils.config.Setting;
+import net.techcable.techutils.config.Time;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.junit.Test;
@@ -47,7 +49,7 @@ public class AnnotationConfigTest {
         TestConfig config = new TestConfig();
         File tempFile = File.createTempFile("config", ".yml");
         if (tempFile.exists()) {
-            tempFile.delete();
+            assertTrue(tempFile.delete());
         }
         config.load(tempFile, AnnotationConfigTest.class.getResource("/test/default.yml"));
         assertEquals(12, config.example1);
@@ -55,6 +57,8 @@ public class AnnotationConfigTest {
         assertEquals("Yr Mum", config.example4);
         assertEquals("Is very nice", config.example5);
         assertEquals("I'm happy today", config.example6);
+        assertEquals(15, config.time);
+
     }
 
     @Test
@@ -75,6 +79,7 @@ public class AnnotationConfigTest {
         assertEquals("Yr Mum", config.example4);
         assertEquals("Is ugly", config.example5); // Overridden but still default
         assertEquals("I'm happy today", config.example6); // Still has default config value, not specified in default config
+        assertEquals(TimeUnit.HOURS.toSeconds(30), config.time);
     }
 
     public static class TestConfig extends AnnotationConfig {
@@ -93,5 +98,9 @@ public class AnnotationConfigTest {
 
         @Setting("example6")
         private String example6;
+
+        @Setting("time")
+        @Time(value = TimeUnit.SECONDS, as = TimeUnit.SECONDS)
+        private int time;
     }
 }

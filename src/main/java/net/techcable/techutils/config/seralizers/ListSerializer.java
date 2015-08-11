@@ -22,26 +22,57 @@
  */
 package net.techcable.techutils.config.seralizers;
 
+import lombok.*;
+
+import java.lang.annotation.Annotation;
 import java.util.List;
 
+import net.techcable.techutils.config.AnnotationConfig;
 import net.techcable.techutils.config.ConfigSerializer;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+
 public class ListSerializer implements ConfigSerializer<List<?>> {
 
     @Override
-    public Object serialize(List<?> objects) {
-        return objects;
+    public Object serialize(List<?> list, final Annotation[] annotations) {
+        return Lists.transform(list, new Function<Object, Object>() {
+
+            @Override
+            @SneakyThrows // Bleeping Function
+            public Object apply(Object java) {
+                ConfigSerializer serializer = AnnotationConfig.getSerializer(java.getClass(), annotations); // Use the annotation array of the field, so every object in the list has the same serialization properties
+                if (serializer == null) throw new InvalidConfigurationException("Unable to serialize: " + java.getClass().getSimpleName());
+                return serializer.serialize(java, annotations);
+            }
+        });
     }
 
     @Override
-    public List<?> deserialize(Object yaml, Class<? extends List<?>> type) throws InvalidConfigurationException {
-        return (List<?>) yaml;
+    public List<?> deserialize(Object yaml, final Class<? extends List<?>> deserializeTo, final Annotation[] annotations) throws InvalidConfigurationException {
+        List<?> yamlList = (List) yaml;
+        return Lists.transform(yamlList, new Function<Object, Object>() {
+
+            @Override
+            @SneakyThrows // Bleeping Function
+            public Object apply(Object yaml) {
+                ConfigSerializer serializer = AnnotationConfig.getDeserializer(yaml.getClass(), annotations); // Use the annotation array of the field, so every object in the list has the same serialization properties
+                if (serializer == null) throw new InvalidConfigurationException("Unable to deserialize: " + yaml.getClass().getSimpleName());
+                return serializer.deserialize(yaml, deserializeTo, annotations);
+            }
+        });
     }
 
     @Override
-    public boolean canHandle(Class<?> type) {
+    public boolean canDeserialize(Class<?> type) {
+        return List.class.isAssignableFrom(type);
+    }
+
+    @Override
+    public boolean canSerialize(Class<?> type) {
         return List.class.isAssignableFrom(type);
     }
 }

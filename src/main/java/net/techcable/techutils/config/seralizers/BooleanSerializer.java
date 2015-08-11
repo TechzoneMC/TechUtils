@@ -22,6 +22,8 @@
  */
 package net.techcable.techutils.config.seralizers;
 
+import java.lang.annotation.Annotation;
+
 import net.techcable.techutils.config.ConfigSerializer;
 
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -29,17 +31,22 @@ import org.bukkit.configuration.InvalidConfigurationException;
 public class BooleanSerializer implements ConfigSerializer<Boolean> {
 
     @Override
-    public Object serialize(Boolean aBoolean) {
+    public Object serialize(Boolean aBoolean, Annotation[] annotations) {
         return aBoolean;
     }
 
     @Override
-    public Boolean deserialize(Object yaml, Class<? extends Boolean> type) throws InvalidConfigurationException {
+    public Boolean deserialize(Object yaml, Class<? extends Boolean> type, Annotation[] annotations) throws InvalidConfigurationException {
         return (Boolean) yaml;
     }
 
     @Override
-    public boolean canHandle(Class<?> type) {
+    public boolean canDeserialize(Class<?> type) {
         return type == boolean.class || type == Boolean.class;
+    }
+
+    @Override
+    public boolean canSerialize(Class<?> type) {
+        return canDeserialize(type);
     }
 }

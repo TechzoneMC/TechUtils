@@ -24,9 +24,14 @@ package net.techcable.techutils.collect;
 
 import lombok.*;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.google.common.base.Supplier;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimaps;
+import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -34,5 +39,15 @@ public class Collections3 {
 
     public static <E> Set<E> newConcurrentHashSet() {
         return Sets.newSetFromMap(new ConcurrentHashMap<E, Boolean>());
+    }
+
+    public static <K, V> SetMultimap<K, V> newConcurrentMultimap() {
+        return Multimaps.newSetMultimap(new ConcurrentHashMap<K, Collection<V>>(), new Supplier<Set<V>>() {
+
+            @Override
+            public Set<V> get() {
+                return newConcurrentHashSet();
+            }
+        });
     }
 }
