@@ -41,12 +41,12 @@ public class FloatSerializer implements ConfigSerializer<Float> {
     }
 
     @Override
-    public boolean canDeserialize(Class<?> type) {
+    public boolean canDeserialize(Class<?> type, Class<?> into) {
         return type == float.class || type == Float.class;
     }
 
     @Override
     public boolean canSerialize(Class<?> type) {
-        return canDeserialize(type);
+        return canDeserialize(type, null); // We support null into
     }
 }

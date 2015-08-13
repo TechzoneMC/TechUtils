@@ -41,12 +41,12 @@ public class CharSerializer implements ConfigSerializer<Character> {
     }
 
     @Override
-    public boolean canDeserialize(Class<?> type) {
+    public boolean canDeserialize(Class<?> type, Class<?> into) {
         return type == char.class || type == Character.class;
     }
 
     @Override
     public boolean canSerialize(Class<?> type) {
-        return canDeserialize(type);
+        return canDeserialize(type, null); // We support null into, but not duplication of logic :)
     }
 }

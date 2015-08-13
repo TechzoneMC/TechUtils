@@ -41,12 +41,12 @@ public class DoubleSerializer implements ConfigSerializer<Double> {
     }
 
     @Override
-    public boolean canDeserialize(Class<?> type) {
+    public boolean canDeserialize(Class<?> type, Class<?> into) {
         return type == double.class || type == Double.class;
     }
 
     @Override
     public boolean canSerialize(Class<?> type) {
-        return canDeserialize(type);
+        return canDeserialize(type, null);
     }
 }

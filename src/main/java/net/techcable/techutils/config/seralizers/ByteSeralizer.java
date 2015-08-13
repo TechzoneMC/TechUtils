@@ -40,12 +40,12 @@ public class ByteSeralizer implements ConfigSerializer<Byte> {
         return (Byte) yaml;
     }
 
-    public boolean canDeserialize(Class<?> type) {
+    public boolean canDeserialize(Class<?> type, Class<?> into) {
         return type == byte.class || type == Byte.class;
     }
 
     @Override
     public boolean canSerialize(Class<?> type) {
-        return canDeserialize(type);
+        return canDeserialize(type, null);
     }
 }

@@ -26,27 +26,34 @@ import java.lang.annotation.Annotation;
 
 import net.techcable.techutils.config.ConfigSerializer;
 
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.configuration.InvalidConfigurationException;
 
-public class IntSerializer implements ConfigSerializer<Integer> {
+public class EnumSerializer implements ConfigSerializer<Enum> {
 
     @Override
-    public Object serialize(Integer integer, Annotation[] annotations) {
-        return integer;
+    public Object serialize(Enum anEnum, Annotation[] annotations) {
+        return WordUtils.capitalizeFully(anEnum.toString().replace("_", " "));
     }
 
     @Override
-    public Integer deserialize(Object yaml, Class<? extends Integer> type, Annotation[] annotations) throws InvalidConfigurationException {
-        return (Integer) yaml;
+    public Enum deserialize(Object yaml, Class<? extends Enum> type, Annotation[] annotations) throws InvalidConfigurationException {
+        String raw = yaml.toString();
+        raw = raw.replace("-", " ");
+        for (Enum e : type.getEnumConstants()) {
+            String asString = e.toString().replace("_", " ").replace("-", " ");
+            if (asString.equalsIgnoreCase(raw)) return e;
+        }
+        throw new InvalidConfigurationException("Could not find enum " + type.getSimpleName() + " for " + raw);
     }
 
     @Override
     public boolean canDeserialize(Class<?> type, Class<?> into) {
-        return type == int.class || type == Integer.class;
+        return type == String.class && into != null && into.isEnum();
     }
 
     @Override
     public boolean canSerialize(Class<?> type) {
-        return canDeserialize(type, null); // Null is supported, but duplication of logic isn't :)
+        return type.isEnum();
     }
 }

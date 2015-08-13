@@ -41,12 +41,12 @@ public class LongSerializer implements ConfigSerializer<Long> {
     }
 
     @Override
-    public boolean canDeserialize(Class<?> type) {
+    public boolean canDeserialize(Class<?> type, Class<?> into) {
         return type == long.class || type == Long.class;
     }
 
     @Override
     public boolean canSerialize(Class<?> type) {
-        return canDeserialize(type);
+        return canDeserialize(type, null);
     }
 }

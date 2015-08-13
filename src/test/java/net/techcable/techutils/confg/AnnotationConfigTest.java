@@ -102,5 +102,18 @@ public class AnnotationConfigTest {
         @Setting("time")
         @Time(value = TimeUnit.SECONDS, as = TimeUnit.SECONDS)
         private int time;
+
+        @Setting("food")
+        private Food food;
+    }
+
+    public static enum Food {
+        TACO,
+        POTATO {
+            @Override
+            public String toString() {
+                return "spud";
+            }
+        };
     }
 }

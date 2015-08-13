@@ -25,10 +25,12 @@ package net.techcable.techutils.config.seralizers;
 import lombok.*;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.techcable.techutils.config.AnnotationConfig;
 import net.techcable.techutils.config.ConfigSerializer;
+import net.techcable.techutils.config.ListOf;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 
@@ -39,6 +41,11 @@ public class ListSerializer implements ConfigSerializer<List<?>> {
 
     @Override
     public Object serialize(List<?> list, final Annotation[] annotations) {
+        ListOf annotationTemp = null;
+        for (Annotation a : annotations) {
+            if (a instanceof ListOf) annotationTemp = (ListOf) a;
+        }
+        final ListOf annotation = annotationTemp;
         return Lists.transform(list, new Function<Object, Object>() {
 
             @Override
@@ -46,28 +53,42 @@ public class ListSerializer implements ConfigSerializer<List<?>> {
             public Object apply(Object java) {
                 ConfigSerializer serializer = AnnotationConfig.getSerializer(java.getClass(), annotations); // Use the annotation array of the field, so every object in the list has the same serialization properties
                 if (serializer == null) throw new InvalidConfigurationException("Unable to serialize: " + java.getClass().getSimpleName());
-                return serializer.serialize(java, annotations);
+                Annotation[] annotationsOn = annotation == null ? annotation.annotations() : new Annotation[0];
+                return serializer.serialize(java, annotationsOn);
             }
         });
     }
 
     @Override
-    public List<?> deserialize(Object yaml, final Class<? extends List<?>> deserializeTo, final Annotation[] annotations) throws InvalidConfigurationException {
-        List<?> yamlList = (List) yaml;
-        return Lists.transform(yamlList, new Function<Object, Object>() {
-
-            @Override
-            @SneakyThrows // Bleeping Function
-            public Object apply(Object yaml) {
-                ConfigSerializer serializer = AnnotationConfig.getDeserializer(yaml.getClass(), annotations); // Use the annotation array of the field, so every object in the list has the same serialization properties
-                if (serializer == null) throw new InvalidConfigurationException("Unable to deserialize: " + yaml.getClass().getSimpleName());
-                return serializer.deserialize(yaml, deserializeTo, annotations);
-            }
-        });
+    public List<?> deserialize(Object yaml, Class<? extends List<?>> ignored, final Annotation[] annotations) throws InvalidConfigurationException {
+        final List<?> yamlList = (List) yaml;
+        ListOf annotation = null;
+        for (Annotation a : annotations) {
+            if (a instanceof ListOf) annotation = (ListOf) a;
+        }
+        Class<?> deserializeTo = annotation != null ? annotation.value() : null;
+        Annotation[] annotationsOn = annotation != null ? annotation.annotations() : new Annotation[0];
+        return deserializeList(yamlList, deserializeTo, annotationsOn);
     }
 
+    public List<?> deserializeList(List<?> yamlList, final Class<?> deserializeTo, final Annotation[] annotations) throws InvalidConfigurationException{
+        List java = new ArrayList<>();
+        for (Object yaml : yamlList) {
+            if (yaml instanceof List) {
+                List subList = deserializeList((List<?>)yamlList, deserializeTo, annotations);
+                java.add(subList);
+            } else {
+                ConfigSerializer serializer = AnnotationConfig.getDeserializer(yaml.getClass(), deserializeTo, annotations);
+                Object element = serializer.deserialize(yaml, deserializeTo, annotations);
+                java.add(element);
+            }
+        }
+        return java;
+    }
+
+
     @Override
-    public boolean canDeserialize(Class<?> type) {
+    public boolean canDeserialize(Class<?> type, Class<?> into) {
         return List.class.isAssignableFrom(type);
     }
 

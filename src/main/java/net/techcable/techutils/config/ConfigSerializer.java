@@ -38,7 +38,7 @@ public interface ConfigSerializer<T> {
 
     public T deserialize(Object yaml, Class<? extends T> type, Annotation[] annotations) throws InvalidConfigurationException;
 
-    public boolean canDeserialize(Class<?> type);
+    public boolean canDeserialize(Class<?> type, Class<?> into);
 
     public boolean canSerialize(Class<?> type);
 

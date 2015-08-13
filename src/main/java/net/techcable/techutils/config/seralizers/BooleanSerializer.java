@@ -41,12 +41,12 @@ public class BooleanSerializer implements ConfigSerializer<Boolean> {
     }
 
     @Override
-    public boolean canDeserialize(Class<?> type) {
+    public boolean canDeserialize(Class<?> type, Class<?> into) {
         return type == boolean.class || type == Boolean.class;
     }
 
     @Override
     public boolean canSerialize(Class<?> type) {
-        return canDeserialize(type);
+        return canDeserialize(type, null); // We support null into, but not duplication of logic :)
     }
 }

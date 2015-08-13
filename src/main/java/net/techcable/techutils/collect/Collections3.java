@@ -25,10 +25,13 @@ package net.techcable.techutils.collect;
 import lombok.*;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.google.common.base.Supplier;
+import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.SetMultimap;
@@ -47,6 +50,16 @@ public class Collections3 {
             @Override
             public Set<V> get() {
                 return newConcurrentHashSet();
+            }
+        });
+    }
+
+    public static <K, V>ListMultimap<K, V> newCopyOnWritetListMultimap() {
+        return Multimaps.newListMultimap(new ConcurrentHashMap<K, Collection<V>>(), new Supplier<List<V>>() {
+
+            @Override
+            public List<V> get() {
+                return new CopyOnWriteArrayList<V>();
             }
         });
     }

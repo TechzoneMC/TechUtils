@@ -26,22 +26,22 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.concurrent.TimeUnit;
 
-/**
- * Marks a value as a type
- */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Time {
+public @interface ListOf {
+
+    public Class<?> value();
+
+    public AnyAnnotation[] annotations() default {};
 
     /**
-     * Get the unit to use when the unit specifies none
-     * <p/>
-     * Defaults to seconds
+     * Placeholder annotation to enable the placement of annotations on the generated code.
      *
-     * @return the unit to use when the unit specifies none
+     * @deprecated Don't use this annotation, ever - Read the documentation.
      */
-    public TimeUnit value() default TimeUnit.SECONDS;
-    public TimeUnit as() default TimeUnit.MILLISECONDS;
+    @Deprecated
+    @Retention(RetentionPolicy.SOURCE)
+    @Target({})
+    public @interface AnyAnnotation {}
 }

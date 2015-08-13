@@ -41,12 +41,12 @@ public class ShortSeralizer implements ConfigSerializer<Short> {
     }
 
     @Override
-    public boolean canDeserialize(Class<?> type) {
+    public boolean canDeserialize(Class<?> type, Class<?> into) {
         return type == short.class || type == Short.class;
     }
 
     @Override
     public boolean canSerialize(Class<?> type) {
-        return canDeserialize(type);
+        return canDeserialize(type, null); // We support null into, but not duplication of logic :)
     }
 }

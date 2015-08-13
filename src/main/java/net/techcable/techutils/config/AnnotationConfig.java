@@ -29,6 +29,12 @@ import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import net.techcable.techutils.Reflection;
 import net.techcable.techutils.collect.Collections3;
@@ -36,6 +42,7 @@ import net.techcable.techutils.config.seralizers.BooleanSerializer;
 import net.techcable.techutils.config.seralizers.ByteSeralizer;
 import net.techcable.techutils.config.seralizers.CharSerializer;
 import net.techcable.techutils.config.seralizers.DoubleSerializer;
+import net.techcable.techutils.config.seralizers.EnumSerializer;
 import net.techcable.techutils.config.seralizers.FloatSerializer;
 import net.techcable.techutils.config.seralizers.IntSerializer;
 import net.techcable.techutils.config.seralizers.ListSerializer;
@@ -48,22 +55,78 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.ListMultimap;
 import com.google.common.io.Files;
 import com.google.common.primitives.Primitives;
 
 public class AnnotationConfig {
 
-    private static final Multimap<Class<? extends Annotation>, ConfigSerializer> serializers = Collections3.newConcurrentMultimap();
+    private static final ListMultimap<Class<? extends Annotation>, ConfigSerializer> serializers = Collections3.newCopyOnWritetListMultimap();
+    private static final Map<Class<? extends Annotation>, Lock> locks = Collections.synchronizedMap(new HashMap<Class<? extends Annotation>, Lock>());
 
     public static void addSerializer(Class<? extends Annotation> annotation, ConfigSerializer serializer) {
-        serializers.put(annotation, serializer);
+        Lock lock = getOrCreateLock(annotation);
+        lock.lock();
+        try {
+            if (hasSerializer(annotation, serializer.getClass())) throw new IllegalStateException("Serializer of type " + serializer.getClass().getSimpleName() + " already exists" + (Setting.class == annotation ? "." : " for annotation " + annotation.getSimpleName() + "."));
+            serializers.put(annotation, serializer);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public static Lock getOrCreateLock(Class<? extends Annotation> annotation) {
+        Lock lock = locks.get(annotation);
+        if (lock == null) {
+            synchronized (locks) {
+                lock = locks.get(annotation); // refresh in case someone else created
+                if (lock == null) { // if someone else hasn't created, we do
+                    lock = new ReentrantLock();
+                    locks.put(annotation, lock);
+                }
+            }
+        }
+        return lock;
+    }
+
+    public static void addSerializerBefore(ConfigSerializer serializer, Class<? extends ConfigSerializer> before) {
+        addSerializerBefore(Setting.class, serializer, before);
+    }
+
+    public static void addSerializerBefore(Class<? extends Annotation> annotation, ConfigSerializer serializer, Class<? extends ConfigSerializer> after) {
+        Lock lock = getOrCreateLock(annotation);
+        lock.lock();
+        try {
+            if (hasSerializer(annotation, serializer.getClass())) throw new IllegalStateException("Serializer of type " + serializer.getClass().getSimpleName() + " already exists" + (Setting.class == annotation ? "." : " for annotation " + annotation.getSimpleName() + "."));
+            List<ConfigSerializer> serializers = AnnotationConfig.serializers.get(annotation);
+            for (int i = 0; i < serializers.size(); i++) {
+                ConfigSerializer existing = serializers.get(i);
+                if (existing.getClass() != after) continue;
+                serializers.add(i, serializer); // Shifts current to the right
+                return; // finally block unlocks
+            }
+            throw new IllegalStateException("Can insert serializer after " + after.getSimpleName());
+        } finally {
+            lock.unlock();
+        }
     }
 
     public static void addSerializer(ConfigSerializer serializer) {
         addSerializer(Setting.class, serializer);
     }
 
+    public static boolean hasSerializer(Class<? extends Annotation> annotation, Class<? extends ConfigSerializer> serializerType) {
+        Lock lock = getOrCreateLock(annotation);
+        lock.lock();
+        try {
+            for (ConfigSerializer existing : serializers.get(annotation)) {
+                if (existing.getClass() == serializerType) return true;
+            }
+            return false;
+        } finally {
+            lock.unlock();
+        }
+    }
 
     static {
         addSerializer(new BooleanSerializer());
@@ -77,19 +140,20 @@ public class AnnotationConfig {
         addSerializer(new ShortSeralizer());
         addSerializer(new StringSerializer());
         addSerializer(Time.class, new TimeSerializer());
+        addSerializerBefore(new EnumSerializer(), StringSerializer.class);
     }
 
-    public static ConfigSerializer getDeserializer(Class<?> yamlType, Annotation... annotations) {
-        for (Annotation annotation : annotations) {;
+    public static ConfigSerializer getDeserializer(Class<?> yamlType, Class<?> into, Annotation... annotations) {
+        for (Annotation annotation : annotations) {
             if (Setting.class.isAssignableFrom(annotation.annotationType())) continue;
             for (ConfigSerializer<?> serializer : serializers.get(annotation.annotationType())) {
-                if (serializer.canDeserialize(yamlType)) {
+                if (serializer.canDeserialize(yamlType, into)) {
                     return serializer;
                 }
             }
         }
         for (ConfigSerializer<?> serializer : serializers.get(Setting.class)) {
-            if (serializer.canDeserialize(yamlType)) {
+            if (serializer.canDeserialize(yamlType, into)) {
                 return serializer;
             }
         }
@@ -142,7 +206,7 @@ public class AnnotationConfig {
             }
             Object yaml = config.get(key);
             Class<?> yamlType = Primitives.isWrapperType(yaml.getClass()) ? Primitives.unwrap(yaml.getClass()) : yaml.getClass();
-            ConfigSerializer serializer = getDeserializer(yamlType, field.getDeclaredAnnotations());
+            ConfigSerializer serializer = getDeserializer(yamlType, field.getType(), field.getDeclaredAnnotations());
             if (serializer == null) throw new InvalidConfigurationException("No serializer for the type " + field.getType().getSimpleName());
             Object java = serializer.deserialize(yaml, field.getType(), field.getDeclaredAnnotations());
             Class<?> javaType = Primitives.unwrap(field.getType());
