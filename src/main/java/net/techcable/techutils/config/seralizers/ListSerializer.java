@@ -53,7 +53,7 @@ public class ListSerializer implements ConfigSerializer<List<?>> {
             public Object apply(Object java) {
                 ConfigSerializer serializer = AnnotationConfig.getSerializer(java.getClass(), annotations); // Use the annotation array of the field, so every object in the list has the same serialization properties
                 if (serializer == null) throw new InvalidConfigurationException("Unable to serialize: " + java.getClass().getSimpleName());
-                Annotation[] annotationsOn = annotation == null ? annotation.annotations() : new Annotation[0];
+                Annotation[] annotationsOn = annotation != null ? annotation.annotations() : new Annotation[0];
                 return serializer.serialize(java, annotationsOn);
             }
         });
