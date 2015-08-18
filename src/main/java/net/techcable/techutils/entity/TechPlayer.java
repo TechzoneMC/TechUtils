@@ -32,6 +32,8 @@ import net.techcable.techutils.scoreboard.TechBoard;
 import net.techcable.techutils.uuid.UUIDUtils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 @RequiredArgsConstructor
@@ -105,6 +107,40 @@ public class TechPlayer {
             scoreboard = new BukkitTechBoard(this);
         }
         return scoreboard;
+    }
+
+    /**
+     * Teleport the player to the specified location
+     * <p/>
+     * Dismounts the player if it is mounted
+     * 
+     * @return if successful
+     */
+    public boolean teleport(Location to) {
+        return teleport(to, false);
+    }
+
+    /**
+     * Teleport the player to the specified location
+     * 
+     * @param preserveMount if we should teleport this player's vehicle too
+     * 
+     * @return if successful
+     */
+    public boolean teleport(Location to, boolean preserveMount) {
+        return teleport(getEntity(), to, preserveMount);
+    }
+
+    private static boolean teleport(Entity entity, Location to, boolean preserveMount) {
+        if (entity == null) return false;
+        Entity vehicle = entity.getVehicle();
+        boolean wasRiding = entity.leaveVehicle();
+        boolean success = entity.teleport(to);
+        if (wasRiding && preserveMount) {
+            teleport(vehicle, to, preserveMount);
+            vehicle.setPassenger(entity);
+        }
+        return success;
     }
 
     /**
