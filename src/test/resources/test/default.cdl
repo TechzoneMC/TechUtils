@@ -1,0 +1,18 @@
+// TechUtils configuration test
+// Default values follow
+
+example1 = 12
+example2 = [
+    "Test",
+    "Mo Test"
+]
+example3 {
+  example4 = "Yr Mum"
+  example5 = "Is very nice"
+}
+
+example6 = "I'm happy today"
+example7 = 15
+
+time = "15 seconds"
+food = "spud"

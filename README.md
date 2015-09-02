@@ -44,3 +44,8 @@ public class ExamplePlayer extends TechPlayer {
     }
 }
 ````
+
+## Credits
+- Techcable - wrote it
+- Akkarin - config format and parser
+  - Making me convert to java 8

@@ -33,11 +33,12 @@ public class EnumSerializer implements ConfigSerializer<Enum> {
 
     @Override
     public Object serialize(Enum anEnum, Annotation[] annotations) {
-        return WordUtils.capitalizeFully(anEnum.toString().replace("_", " "));
+        return anEnum; // Candle supports enums :)
     }
 
     @Override
     public Enum deserialize(Object yaml, Class<? extends Enum> type, Annotation[] annotations) throws InvalidConfigurationException {
+        if (yaml.getClass().isEnum()) return (Enum) yaml;
         String raw = yaml.toString();
         raw = raw.replace("-", " ");
         for (Enum e : type.getEnumConstants()) {
@@ -49,7 +50,7 @@ public class EnumSerializer implements ConfigSerializer<Enum> {
 
     @Override
     public boolean canDeserialize(Class<?> type, Class<?> into) {
-        return type == String.class && into != null && into.isEnum();
+        return  (type == String.class || type.isEnum()) && into != null && into.isEnum();
     }
 
     @Override
