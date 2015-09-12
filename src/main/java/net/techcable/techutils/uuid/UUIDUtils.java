@@ -24,6 +24,7 @@ package net.techcable.techutils.uuid;
 
 import java.util.UUID;
 
+import lombok.Getter;
 import net.techcable.techutils.Reflection;
 
 import org.bukkit.Bukkit;
@@ -37,6 +38,7 @@ public class UUIDUtils {
     private UUIDUtils() {
     }
 
+    @Getter
     private static final CachingLookup lookup = new CachingLookup(new BackupLookup(new MCPlayerIndexLookup(), new MojangLookup()));
 
     /**
