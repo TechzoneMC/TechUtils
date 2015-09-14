@@ -87,14 +87,11 @@ public class MojangLookup implements Lookup {
         return id.toString().replace("-", "");
     }
 
-    private static UUID toUUID(String raw) {
-        String dashed;
-        if (raw.length() == 32) {
-            dashed = raw.substring(0, 8) + "-" + raw.substring(8, 12) + "-" + raw.substring(12, 16) + "-" + raw.substring(16, 20) + "-" + raw.substring(20, 32);
-        } else {
-            dashed = raw;
+    private static UUID toUUID(String s) {
+        if (s.length() == 32) {
+            s = s.substring(0, 8) + "-" + s.substring(8, 12) + "-" + s.substring(12, 16) + "-" + s.substring(16, 20) + "-" + s.substring(20, 32);
         }
-        return UUID.fromString(raw);
+        return UUID.fromString(s);
     }
 
     @Override
