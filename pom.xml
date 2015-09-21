@@ -34,6 +34,13 @@
             <groupId>com.torchmind.candle</groupId>
             <artifactId>core</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <exclusions>
+                <!-- FindBugs is not a runtime dependency -->
+                <exclusion>
+                    <groupId>com.google.code.findbugs</groupId>
+                    <artifactId>findbugs</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
@@ -50,6 +57,15 @@
                         <relocation>
                             <pattern>com.torchmind.candle</pattern>
                             <shadedPattern>net.techcable.techutils.libs.candle</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.antlr.v4.runtime</pattern>
+                            <shadedPattern>net.techcable.techutils.libs.antlr</shadedPattern>
+                        </relocation>
+                        <!-- Some weird antlr dependency -->
+                        <relocation>
+                            <pattern>org.abego.treelayout</pattern>
+                            <shadedPattern>net.techcable.techutils.libs.antlr.libs.treelayout</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
