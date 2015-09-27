@@ -117,6 +117,14 @@ public abstract class FakeEntity {
     public void setInvisible(boolean invisible) {
         set0Flag(5, invisible);
     }
+    
+    public void setShowPotion(boolean showParticles) {
+        watcher.setObject(8, showParticles);
+    }
+    
+    public void setPotionEffectColor(int potionColor) {
+        watcher.setObject(7, potionColor);
+    }
 
     private void set0Flag(int flagIndex, boolean value) {
         byte b = watcher.hasIndex(0) ? watcher.getByte(0) : 0;
@@ -131,4 +139,9 @@ public abstract class FakeEntity {
     public abstract float getMaxHealth();
 
     public abstract byte getMobTypeId();
+    
+    public static int mapPotionRGB(byte r, byte g, byte b) {
+        // From client source code
+        return (int) r << 16 | (int) g << 8 | (int) b;
+    }
 }
