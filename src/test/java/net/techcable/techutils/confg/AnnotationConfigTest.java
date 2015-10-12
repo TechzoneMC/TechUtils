@@ -23,81 +23,74 @@
 package net.techcable.techutils.confg;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
-import com.google.common.io.ByteSource;
 import com.google.common.io.CharSink;
 import com.google.common.io.CharSource;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
+
 import net.techcable.techutils.config.AnnotationConfig;
-import net.techcable.techutils.config.Setting;
-import net.techcable.techutils.config.Time;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.junit.Test;
 
-import com.google.common.io.ByteStreams;
-import com.google.common.io.Closeables;
-
 import static org.junit.Assert.*;
 
-public class AnnotationConfigTest {
+public abstract class AnnotationConfigTest<C extends TestConfig> {
 
     @Test
     public void testDefaultLoad() throws IOException, InvalidConfigurationException {
-        TestConfig config = new TestConfig();
-        File tempFile = File.createTempFile("config", ".yml");
+        C config = newTestConfig();
+        File tempFile = File.createTempFile("config", ".txt");
         if (tempFile.exists()) {
             assertTrue(tempFile.delete());
         }
-        config.load(tempFile, AnnotationConfigTest.class.getResource("/test/default.cdl"));
-        assertEquals(12, config.example1);
-        assertArrayEquals(new String[]{"Test", "Mo Test"}, config.example2.toArray(new String[config.example2.size()]));
-        assertEquals("Yr Mum", config.example4);
-        assertEquals("Is very nice", config.example5);
-        assertEquals("I'm happy today", config.example6);
-        assertEquals(15, config.time);
-
+        load(config, tempFile, AnnotationConfigTest.class.getResource(getDefaultResource()));
+        assertEquals(12, config.getExample1());
+        assertArrayEquals(new String[] {"Test", "Mo Test"}, config.getExample2().toArray(new String[config.getExample2().size()]));
+        assertEquals("Yr Mum", config.getExample4());
+        assertEquals("Is very nice", config.getExample5());
+        assertEquals("I'm happy today", config.getExample6());
+        assertEquals(Food.POTATO, config.getFood());
+        assertEquals(15, config.getTime());
     }
 
     @Test
     public void testOverridenLoad() throws IOException, InvalidConfigurationException {
-        TestConfig config = new TestConfig();
-        File tempFile = File.createTempFile("config", ".yml");
-        URL modifiedURL = Resources.getResource(getClass(), "/test/modified.cdl");
+        C config = newTestConfig();
+        File tempFile = File.createTempFile("config", ".txt");
+        URL modifiedURL = Resources.getResource(getClass(), getModifiedResource());
         CharSource in = Resources.asByteSource(modifiedURL).asCharSource(Charsets.UTF_8);
         CharSink out = Files.asCharSink(tempFile, Charsets.UTF_8);
         in.copyTo(out);
-        config.load(tempFile, AnnotationConfig.class.getResource("/test/default.cdl"));
-        assertEquals(112, config.example1);
-        assertArrayEquals(new String[]{"This is", "stupid test"}, config.example2.toArray(new String[config.example2.size()]));
-        assertEquals("Yr Mum", config.example4);
-        assertEquals("Is ugly", config.example5); // Overridden but still default
-        assertEquals("I'm happy today", config.example6); // Still has default config value, not specified in default config
-        assertEquals(TimeUnit.HOURS.toSeconds(30), config.time);
+        load(config, tempFile, AnnotationConfig.class.getResource(getDefaultResource()));
+        assertEquals(112, config.getExample1());
+        assertArrayEquals(new String[] {"This is", "stupid test"}, config.getExample2().toArray(new String[config.getExample2().size()]));
+        assertEquals("Yr Mum", config.getExample4());
+        assertEquals("Is ugly", config.getExample5()); // Overridden but still default
+        assertEquals("I'm happy today", config.getExample6()); // Still has default config value, not specified in default config
+        assertEquals(Food.TACO, config.getFood());
+        assertEquals(TimeUnit.HOURS.toSeconds(30), config.getTime());
     }
 
     @Test
     public void testLoadSaveEquals() throws IOException, InvalidConfigurationException {
-        TestConfig config = new TestConfig();
+        C config = newTestConfig();
         File tempFile = File.createTempFile("config", ".yml");
-        URL modifiedURL = Resources.getResource(getClass(), "/test/modified.cdl");
-        URL defaultURL = Resources.getResource(getClass(), "/test/default.cdl");
+        URL modifiedURL = Resources.getResource(getClass(), getModifiedResource());
+        URL defaultURL = Resources.getResource(getClass(), getDefaultResource());
         CharSource originalIn = Resources.asByteSource(modifiedURL).asCharSource(Charsets.UTF_8);
         CharSink out = Files.asCharSink(tempFile, Charsets.UTF_8);
         CharSource fileIn = Files.asCharSource(tempFile, Charsets.UTF_8);
         originalIn.copyTo(out);
-        config.load(tempFile, defaultURL);
-        config.save(tempFile, defaultURL);
+        load(config, tempFile, defaultURL);
+        save(config, tempFile, defaultURL);
         List<String> originalLines = originalIn.readLines();
         originalLines = Lists.transform(originalLines, (s) -> s.replaceAll("\\s", "")); // Strip whitespace
         List<String> fileLines = fileIn.readLines();
@@ -105,38 +98,14 @@ public class AnnotationConfigTest {
         assertEquals(originalLines, fileLines);
     }
 
-    public static class TestConfig extends AnnotationConfig {
+    public abstract String getModifiedResource();
 
-        @Setting("example1")
-        private int example1;
+    public abstract String getDefaultResource();
 
-        @Setting("example2")
-        private List<String> example2;
+    protected abstract C newTestConfig();
 
-        @Setting("example3.example4")
-        private String example4;
+    protected abstract void load(C config, File file, URL defaultURL) throws IOException, InvalidConfigurationException;
 
-        @Setting("example3.example5")
-        private String example5;
+    protected abstract void save(C config, File file, URL defaultURL) throws IOException, InvalidConfigurationException;
 
-        @Setting("example6")
-        private String example6;
-
-        @Setting("time")
-        @Time(value = TimeUnit.SECONDS, as = TimeUnit.SECONDS)
-        private int time;
-
-        @Setting("food")
-        private Food food;
-    }
-
-    public static enum Food {
-        TACO,
-        POTATO {
-            @Override
-            public String toString() {
-                return "spud";
-            }
-        }
-    }
 }

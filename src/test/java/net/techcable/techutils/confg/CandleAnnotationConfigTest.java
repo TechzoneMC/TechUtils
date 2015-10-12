@@ -20,41 +20,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.techcable.techutils.config.seralizers;
+package net.techcable.techutils.confg;
 
-import java.lang.annotation.Annotation;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
-import net.techcable.techutils.config.ConfigSerializer;
-
-import org.apache.commons.lang.WordUtils;
 import org.bukkit.configuration.InvalidConfigurationException;
 
-public class EnumSerializer implements ConfigSerializer<Enum> {
+public class CandleAnnotationConfigTest extends AnnotationConfigTest<CandleTestConfig> {
 
     @Override
-    public Object serialize(Enum anEnum, Annotation[] annotations) {
-        return anEnum.toString();
+    public String getModifiedResource() {
+        return "/test/modified.cdl";
     }
 
     @Override
-    public Enum deserialize(Object yaml, Class<? extends Enum> type, Annotation[] annotations) throws InvalidConfigurationException {
-        if (yaml.getClass().isEnum()) return (Enum) yaml;
-        String raw = yaml.toString();
-        raw = raw.replace("-", " ");
-        for (Enum e : type.getEnumConstants()) {
-            String asString = e.toString().replace("_", " ").replace("-", " ");
-            if (asString.equalsIgnoreCase(raw)) return e;
-        }
-        throw new InvalidConfigurationException("Could not find enum " + type.getSimpleName() + " for " + raw);
+    public String getDefaultResource() {
+        return "/test/default.cdl";
     }
 
     @Override
-    public boolean canDeserialize(Class<?> type, Class<?> into) {
-        return  (type == String.class || type.isEnum()) && into != null && into.isEnum();
+    protected CandleTestConfig newTestConfig() {
+        return new CandleTestConfig();
     }
 
     @Override
-    public boolean canSerialize(Class<?> type) {
-        return type.isEnum();
+    protected void load(CandleTestConfig config, File file, URL defaultURL) throws IOException, InvalidConfigurationException {
+        config.load(file, defaultURL);
     }
+
+    @Override
+    protected void save(CandleTestConfig config, File file, URL defaultURL) throws IOException, InvalidConfigurationException {
+        config.save(file, defaultURL);
+    }
+
 }

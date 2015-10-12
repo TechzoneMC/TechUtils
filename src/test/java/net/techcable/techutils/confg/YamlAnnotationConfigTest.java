@@ -20,41 +20,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.techcable.techutils.config.seralizers;
+package net.techcable.techutils.confg;
 
-import java.lang.annotation.Annotation;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
-import net.techcable.techutils.config.ConfigSerializer;
-
-import org.apache.commons.lang.WordUtils;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.junit.Test;
 
-public class EnumSerializer implements ConfigSerializer<Enum> {
+public class YamlAnnotationConfigTest extends AnnotationConfigTest<YamlTestConfig> {
 
     @Override
-    public Object serialize(Enum anEnum, Annotation[] annotations) {
-        return anEnum.toString();
+    public String getModifiedResource() {
+        return "/test/modified.yml";
     }
 
     @Override
-    public Enum deserialize(Object yaml, Class<? extends Enum> type, Annotation[] annotations) throws InvalidConfigurationException {
-        if (yaml.getClass().isEnum()) return (Enum) yaml;
-        String raw = yaml.toString();
-        raw = raw.replace("-", " ");
-        for (Enum e : type.getEnumConstants()) {
-            String asString = e.toString().replace("_", " ").replace("-", " ");
-            if (asString.equalsIgnoreCase(raw)) return e;
-        }
-        throw new InvalidConfigurationException("Could not find enum " + type.getSimpleName() + " for " + raw);
+    public String getDefaultResource() {
+        return "/test/default.yml";
     }
 
     @Override
-    public boolean canDeserialize(Class<?> type, Class<?> into) {
-        return  (type == String.class || type.isEnum()) && into != null && into.isEnum();
+    protected YamlTestConfig newTestConfig() {
+        return new YamlTestConfig();
     }
 
     @Override
-    public boolean canSerialize(Class<?> type) {
-        return type.isEnum();
+    protected void load(YamlTestConfig config, File file, URL defaultURL) throws IOException, InvalidConfigurationException {
+        config.load(file, defaultURL);
+    }
+
+    @Override
+    protected void save(YamlTestConfig config, File file, URL defaultURL) throws IOException, InvalidConfigurationException {
+        config.save(file, defaultURL);
+    }
+
+    @Override
+    @Test(expected = UnsupportedOperationException.class)
+    public void testLoadSaveEquals() throws IOException, InvalidConfigurationException {
+        super.testLoadSaveEquals();
     }
 }
